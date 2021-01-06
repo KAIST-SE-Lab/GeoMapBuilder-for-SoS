@@ -7,8 +7,29 @@ import java.sql.Timestamp;
  * @author ymbaek, sjlee
  */
 public abstract class _SimMap_ {
-    protected Timestamp timestamp;    //Timestamp for stdout
+    protected Timestamp timestamp;      //Timestamp for stdout
 
-    protected String mapId;
-    protected String mapName;
+    protected String mapId;             //id of a map
+    protected String mapName;           //name of a map
+
+    public _SimMap_(String mapId, String mapName) {
+        this.mapId = mapId;
+        this.mapName = mapName;
+    }
+
+    public String getMapId() {
+        return mapId;
+    }
+
+    public void setMapId(String mapId) {
+        this.mapId = mapId;
+    }
+
+    public String getMapName() {
+        return mapName;
+    }
+
+    public void setMapName(String mapName) {
+        this.mapName = mapName;
+    }
 }
