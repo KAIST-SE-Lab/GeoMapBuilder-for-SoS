@@ -40,9 +40,11 @@ public class SimEngine {
     public void startSimulation(){
 
         logger.info("(pre-simulation) A SimEngine object is constructed and initialized.");
+        logger.info("(pre-simulation) ─────────────────────────────────────────────────────");
 
         for (;simTick < simTotalTime; simTick++){
             System.out.println(simTick);
+            logger.info("(simulation) A SimEngine object is constructed and initialized.");
         }
     }
 

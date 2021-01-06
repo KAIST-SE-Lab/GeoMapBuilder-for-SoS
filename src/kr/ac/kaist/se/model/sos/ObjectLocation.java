@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * (note: independent from SIMVA-SoS Lite)
  * @author ymbaek
  */
-public abstract class ObjectLocation {
+public class ObjectLocation {
 
     //TODO: Here, String?
 
