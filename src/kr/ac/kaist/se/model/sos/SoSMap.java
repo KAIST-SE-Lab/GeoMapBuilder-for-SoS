@@ -46,22 +46,11 @@ public abstract class SoSMap extends _SimMap_ {
         /* Initialization of map dimensions (mapDimVars) */
         initMapDimensions();
 
-//        timestamp = new Timestamp(System.currentTimeMillis());
-//        System.out.println("[" + timestamp + "] (ToySoSMap: initDimensions) Dimensions (mapDimVars) are initialized (size:" + mapDimVars.size() + ")");
-
-
         /* Initialization of map data variables (mapDataVars) */
         initMapInformation();
 
-//        timestamp = new Timestamp(System.currentTimeMillis());
-//        System.out.println("[" + timestamp + "] (ToySoSMap: initDimensions) MapInformation (mapDataVars) is initialized (size:" + mapDataVars.size() + ")");
-
-
         /* Initialization of map location information (mapLocInfo) */
         initMapLocInfo();
-
-//        timestamp = new Timestamp(System.currentTimeMillis());
-//        System.out.println("[" + timestamp + "] (ToySoSMap: initDimensions) Location information (mapLocInfo) are initialized (size:" + mapLocInfo.size() + ")");
 
         //TODO: MapBuilder
 //        mapBuilder.updateMapData(mapDimVars, mapDataVars, mapLocInfo, new ArrayList<String>());
@@ -118,6 +107,8 @@ public abstract class SoSMap extends _SimMap_ {
         System.out.println("[" + this.getClass().getSimpleName() + "] mapLocInfo (hashMap) initialized (size:" + getMapLocInfo().size() + ")");
     }
 
+//    private String makeKeyString(){
+//    }
 
 //    private String attachKeyString(ArrayList<String> keyList, int varIndex){
 //
