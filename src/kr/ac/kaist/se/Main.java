@@ -19,10 +19,15 @@ public class Main {
 
     public static void main (String []args){
         //TODO: dimVarList, dataVarList
+//        ExampleSoSMap sosMap = new ExampleSoSMap("SOSMAP01",
+//                "EXAMPLE_SOS_MAP",
+//                new ArrayList<DimVar>(),
+//                new ArrayList<DataVar>());
+
+
+
         ExampleSoSMap sosMap = new ExampleSoSMap("SOSMAP01",
-                "EXAMPLE_SOS_MAP",
-                new ArrayList<DimVar>(),
-                new ArrayList<DataVar>());
+                "EXAMPLE_SOS_MAP");
 
         ExampleSoSType sos = new ExampleSoSType("SOS01",
                 "EXAMPLE_SOS",

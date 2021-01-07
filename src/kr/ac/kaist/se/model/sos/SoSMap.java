@@ -15,8 +15,8 @@ import java.util.HashMap;
 public abstract class SoSMap extends _SimMap_ {
 
     /** ArrayLists for MapDimensions and MapInformation */
-    protected ArrayList<DimVar> mapDimVars = new ArrayList<>();   //LocDimensions of this map
-    public ArrayList<DataVar> mapDataVars = new ArrayList<>();          //LocInformations of this map
+    private ArrayList<DimVar> mapDimVars = new ArrayList<>();         //LocDimensions of this map
+    private ArrayList<DataVar> mapDataVars = new ArrayList<>();          //LocInformations of this map
 
     /** Initialization of map */
     protected HashMap<String, ArrayList<DataVar>> mapLocInfo = new HashMap<>(); //HashMap to store location information
@@ -24,6 +24,11 @@ public abstract class SoSMap extends _SimMap_ {
     /** MapBuilder */
     protected MapBuilder mapBuilder = new MapBuilder(); //MapBuilder to initialize and update a map
 
+
+    public SoSMap(String mapId, String mapName) {
+        super(mapId, mapName);
+        initMap();
+    }
 
     public SoSMap(String mapId,
                   String mapName,
@@ -90,40 +95,137 @@ public abstract class SoSMap extends _SimMap_ {
             ...
          */
 
-//        String key = "";
-//        int index = 0;
-//        for (DimVar dimVar : mapDimVars){
-//            if (index < mapDimVars.size()-1){
-//                key += dimVar.getDataDefaultValue() + ",";
-//            }else{
-//                key += dimVar.getDataDefaultValue();
-//            }
-//
-//            if (dimVar.getVarType().equals("Int") || dimVar.getVarType().equals("Integer")){
-//                DimVar tmpDimVar = (DimVar)dimVar.clone();
-//                tmpDimVar.setDataCurValue((int)dimVar.getVarDomain().getDomainMinVal() + "");
-//
-//                while (Integer.valueOf(tmpDimVar.getDataCurValue()) <= (int)tmpDimVar.getVarDomain().getDomainMaxVal()){
-//                    System.out.print(tmpDimVar.getDataCurValue() + " ");
-//                    tmpDimVar.updateValueOfDim(1);
-//                }
-//
-//                System.out.println(tmpDimVar.getDataCurValue());
-//            }
-//
-//            System.out.print(dimVar.getVarName() + "[" + dimVar.getVarDomain().getDomainMinVal());
-//
-//            System.out.println("-" + dimVar.getVarDomain().getDomainMaxVal() + "]");
-//
-//            index++;
-//        }
-//
-//        System.out.println(key);
+        //Set dataCurValues as minimum values allowed by their domains
+        for (DimVar mapDimVar : mapDimVars){
+            if (mapDimVar.getVarType().equals("Int")) {
+                mapDimVar.setDataCurValue((int) mapDimVar.getVarDomain().getDomainMinVal() + "");
+//                System.out.println("int:" + mapDimVar.getDataCurValue());
+            } else {
+                mapDimVar.setDataCurValue(mapDimVar.getVarDomain().getDomainEnumVal().get(0) + "");
+//                System.out.println("not int:" + mapDimVar.getDataCurValue());
+            }
+        }
 
 
+        //Keys to be stored in hashmap (mapLocInfo)
+        ArrayList<String> keyList = new ArrayList<>();
 
+//        attachKeyString(keyList, 0);
+//        System.out.println("[size:" + keyList.size() + "] " + keyList);
+
+//        System.out.println(countAllLocPoints());
+
+        System.out.println("[" + this.getClass().getSimpleName() + "] mapLocInfo (hashMap) initialized (size:" + getMapLocInfo().size() + ")");
     }
 
+
+//    private String attachKeyString(ArrayList<String> keyList, int varIndex){
+//
+////        int dimIndex = 0;
+////        String key = "";
+//
+//        while (mapDimVars.get(varIndex).checkUpdateValid(0)){
+//
+//            System.out.println((varIndex+1) + "|" + mapDimVars.size());
+//
+//            String curDimVarVal = mapDimVars.get(varIndex).getDataCurValue();
+//
+////            boolean isInsideOfDomain = ;
+////            if (!isInsideOfDomain) {
+////                System.out.println("outOfDomain");
+////                return "";
+////            }
+//
+//            //If this varIndex is the last
+//            if (varIndex + 1 >= mapDimVars.size()){
+//                System.out.println(curDimVarVal);
+////                keyList.add(curDimVarVal);
+//
+//                return curDimVarVal;
+//            }
+//            //If a next DimVar exists
+//            else{
+////                keyList.add(curDimVarVal + attachKeyString(keyList, varIndex++));
+//                return curDimVarVal + attachKeyString(keyList, varIndex++);
+//            }
+//
+//            mapDimVars.get(varIndex).updateValueOfDim(1);
+//
+//        }
+//
+//    }
+
+    /**
+     * A method to add a DimVar into mapDimVars
+     * @param aDimVar DimVar to be added
+     */
+    protected void addDimVar(DimVar aDimVar){
+        boolean isDuplicate = false;
+        for (DimVar dimVar : mapDimVars){
+            if (aDimVar.getVarId().equals(dimVar.getVarId())){
+                isDuplicate = true;
+            }
+        }
+
+        if (!isDuplicate){
+            mapDimVars.add(aDimVar);
+        }else{
+            System.out.println("[" + this.getClass().getSimpleName() + "] addDimVar failed (duplicate id: " + aDimVar.getVarId() + ")");
+        }
+    }
+
+    /**
+     * A method to add a DataVar into mapDataVars
+     * @param aDataVar DataVar to be added
+     */
+    protected void addDataVar(DataVar aDataVar){
+        boolean isDuplicate = false;
+        for (DataVar dataVar : mapDataVars){
+            if (aDataVar.getVarId().equals(dataVar.getVarId())){
+                isDuplicate = true;
+            }
+        }
+
+        if (!isDuplicate){
+            mapDataVars.add(aDataVar);
+        }else{
+            System.out.println("[" + this.getClass().getSimpleName() + "] addDataVar failed (duplicate id: " + aDataVar.getVarId() + ")");
+        }
+    }
+
+
+    /**
+     * A method to count the number of all location points
+     * @return number of location points in a map
+     */
+    protected int countAllLocPoints(){
+        int count = 1;
+
+        for (DimVar dimVar : mapDimVars) {
+            int dimVarCount = 0;
+
+            //For integer data
+            if (dimVar.getVarType().equals("Int")) {
+                dimVar.setDataCurValue((int)dimVar.getVarDomain().getDomainMinVal() + "");
+            }
+            //For enum data
+            else{
+                dimVar.setDataCurValue(dimVar.getVarDomain().getDomainEnumVal().get(0) + "");
+            }
+
+            boolean isInsideOfDomain = true;
+            while (isInsideOfDomain) {
+                //Increase value by 1
+                isInsideOfDomain = dimVar.updateValueOfDim(1);
+                //Count
+                dimVarCount++;
+            }
+
+            count *= dimVarCount;
+        }
+
+        return count;
+    }
 
 
     /* Getters & Setters */

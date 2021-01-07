@@ -42,9 +42,16 @@ public class SimEngine {
         logger.info("(pre-simulation) A SimEngine object is constructed and initialized.");
         logger.info("(pre-simulation) ─────────────────────────────────────────────────────");
 
+        /* Discrete-time simulation */
         for (;simTick < simTotalTime; simTick++){
-            System.out.println(simTick);
-            logger.info("(simulation) A SimEngine object is constructed and initialized.");
+            System.out.println("─────────────────────────────────────────────────────");
+            System.out.println("simTick: " + simTick);
+
+            //Logging for every tick
+            logger.info("(simulation) Simulation current tick: " + simTick);
+            logger.info("(simulation) [" + simTick + "] ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ");
+
+            simModel.run(simTick);
         }
     }
 
