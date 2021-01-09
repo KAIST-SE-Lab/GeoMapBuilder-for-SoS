@@ -84,28 +84,81 @@ public abstract class SoSMap extends _SimMap_ {
             ...
          */
 
-        //Set dataCurValues as minimum values allowed by their domains
-        for (DimVar mapDimVar : mapDimVars){
-            if (mapDimVar.getVarType().equals("Int")) {
-                mapDimVar.setDataCurValue((int) mapDimVar.getVarDomain().getDomainMinVal() + "");
-//                System.out.println("int:" + mapDimVar.getDataCurValue());
-            } else {
-                mapDimVar.setDataCurValue(mapDimVar.getVarDomain().getDomainEnumVal().get(0) + "");
-//                System.out.println("not int:" + mapDimVar.getDataCurValue());
-            }
-        }
 
+        initMapDimVarsAsMinVal();
 
         //Keys to be stored in hashmap (mapLocInfo)
-        ArrayList<String> keyList = new ArrayList<>();
+        ArrayList<String> keyList = makeKeyString(0);
 
-//        attachKeyString(keyList, 0);
-//        System.out.println("[size:" + keyList.size() + "] " + keyList);
+        for (String key : keyList){
+            mapLocInfo.put(key, null);
+        }
 
-//        System.out.println(countAllLocPoints());
+        System.out.println(mapLocInfo);
 
         System.out.println("[" + this.getClass().getSimpleName() + "] mapLocInfo (hashMap) initialized (size:" + getMapLocInfo().size() + ")");
     }
+
+    private void initMapDimVarsAsMinVal(){
+        //Set dataCurValues as minimum values allowed by their domains
+        for (DimVar mapDimVar : mapDimVars){
+            initMapDimVarAsMinVal(mapDimVar);
+        }
+    }
+
+    private void initMapDimVarAsMinVal(DimVar aDimVar){
+        if (aDimVar.getVarType().equals("Int")) {
+            aDimVar.setDataCurValue((int) aDimVar.getVarDomain().getDomainMinVal() + "");
+        } else {
+            aDimVar.setDataCurValue(aDimVar.getVarDomain().getDomainEnumVal().get(0) + "");
+        }
+    }
+
+
+    private ArrayList<String> makeKeyString(int varIndex){
+
+        ArrayList<String> thisKeyList = new ArrayList<>();
+
+        if (varIndex + 1 >= mapDimVars.size()){
+
+            boolean isUpdatePossible = true;
+            while (isUpdatePossible){
+                thisKeyList.add(mapDimVars.get(varIndex).getDataCurValue());
+
+                if (!mapDimVars.get(varIndex).checkUpdateValid(1)){
+                    isUpdatePossible = false;
+                    initMapDimVarAsMinVal(mapDimVars.get(varIndex));
+                }else{
+                    mapDimVars.get(varIndex).updateValueOfDim(1);
+                }
+            }
+
+        }else{
+            int nextVarIndex = varIndex + 1;
+
+            boolean isUpdatePossible = true;
+            while (isUpdatePossible){
+                ArrayList<String> subKeyList = makeKeyString(nextVarIndex);
+
+                for (String subKeyString : subKeyList){
+                    thisKeyList.add(mapDimVars.get(varIndex).getDataCurValue() + "," + subKeyString);
+                }
+
+                if (!mapDimVars.get(varIndex).checkUpdateValid(1)){
+                    isUpdatePossible = false;
+                    initMapDimVarAsMinVal(mapDimVars.get(varIndex));
+                }else{
+                    mapDimVars.get(varIndex).updateValueOfDim(1);
+                }
+            }
+        }
+
+        return thisKeyList;
+    }
+
+
+
+
 
 //    private String makeKeyString(){
 //    }

@@ -32,8 +32,8 @@ public class ExampleSoSMap extends SoSMap {
             - floor: enum ("FLOOR_1", "FLOOR_2", "FLOOR_3")
          */
 
-        DimVarDomain xPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 9);
-        DimVarDomain yPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 2);
+        DimVarDomain xPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
+        DimVarDomain yPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
         DimVarDomain floorDomain = new DimVarDomain(EnumDomainType.ENUMERATION, new ArrayList<String>(Arrays.asList("FLOOR_1", "FLOOR_2", "FLOOR_3")));
 
         MapCoordinateDimType xPosDimVar = new MapCoordinateDimType(
@@ -51,18 +51,18 @@ public class ExampleSoSMap extends SoSMap {
                 "0",
                 "0",
                 yPosDomain);
-//
-//        MapFloorDimType floorDimVar = new MapFloorDimType(
-//                "floorVar",
-//                "floorVar",
-//                "Enum",
-//                "FLOOR_1",
-//                "FLOOR_1",
-//                floorDomain);
+
+        MapFloorDimType floorDimVar = new MapFloorDimType(
+                "floorVar",
+                "floorVar",
+                "Enum",
+                "FLOOR_1",
+                "FLOOR_1",
+                floorDomain);
 
         addDimVar(xPosDimVar);
-//        addDimVar(yPosDimVar);
-//        addDimVar(floorDimVar);
+        addDimVar(yPosDimVar);
+        addDimVar(floorDimVar);
 
         System.out.println("[" + this.getClass().getSimpleName() + "] mapDimVars initialized (size:" + getMapDimVars().size() + ")");
     }
