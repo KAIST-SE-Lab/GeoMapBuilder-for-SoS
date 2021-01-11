@@ -79,7 +79,7 @@ public class ExampleSoSMap extends SoSMap {
 
 
         DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
-        DataVarDomain isChargingStation = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
+        DataVarDomain isChargingStation = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,10);
 
         DataVar isWallVar = new DataVar(
                 "isWallVar",

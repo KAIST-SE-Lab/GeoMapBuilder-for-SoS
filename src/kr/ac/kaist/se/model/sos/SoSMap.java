@@ -1,6 +1,7 @@
 package kr.ac.kaist.se.model.sos;
 
 import kr.ac.kaist.se.controller.util.MapBuilder;
+import kr.ac.kaist.se.controller.util.MapFileReader;
 import kr.ac.kaist.se.model.abst.geo._SimMap_;
 import kr.ac.kaist.se.model.sos.var.DataVar;
 import kr.ac.kaist.se.model.sos.var.DimVar;
@@ -22,7 +23,8 @@ public abstract class SoSMap extends _SimMap_ {
     protected HashMap<String, ArrayList<DataVar>> mapLocInfo = new HashMap<>(); //HashMap to store location information
 
     /** MapBuilder */
-    protected MapBuilder mapBuilder = new MapBuilder(); //MapBuilder to initialize and update a map
+    protected MapBuilder mapBuilder; //MapBuilder to initialize and update a map
+
 
 
     public SoSMap(String mapId, String mapName) {
@@ -37,6 +39,8 @@ public abstract class SoSMap extends _SimMap_ {
         super(mapId, mapName);
         this.mapDimVars = mapDimVars;
         this.mapDataVars = mapDataVars;
+
+        initMap();
     }
 
     /**
@@ -84,19 +88,48 @@ public abstract class SoSMap extends _SimMap_ {
             ...
          */
 
+        initMapLocKeys();
 
+        String fileName = "ExampleSoSMapInit.txt";
+
+        MapFileReader fileReader = new MapFileReader();
+        String mapInitString = fileReader.readMapFile(fileName);
+
+        mapBuilder = new MapBuilder();
+        mapBuilder.updateMapData(mapInitString, mapLocInfo, mapDimVars, mapDataVars);
+
+
+
+//        System.out.println(mapLocInfo);
+
+        System.out.println("[" + this.getClass().getSimpleName() + "] mapLocInfo (hashMap) initialized (size:" + getMapLocInfo().size() + ")");
+    }
+
+
+    private void initMapLocKeys(){
         initMapDimVarsAsMinVal();
 
         //Keys to be stored in hashmap (mapLocInfo)
         ArrayList<String> keyList = makeKeyString(0);
 
-        for (String key : keyList){
-            mapLocInfo.put(key, null);
+        ArrayList<DataVar> defaultDataVars = new ArrayList<>();
+
+        for (DataVar dataVar : mapDataVars){
+            DataVar newDataVar = new DataVar(
+                    dataVar.getVarId(),
+                    dataVar.getVarName(),
+                    dataVar.getVarType(),
+                    dataVar.getDataDefaultValue(),
+                    dataVar.getDataCurValue(),
+                    dataVar.getVarDomain()
+            );
+
+            defaultDataVars.add(newDataVar);
         }
 
-        System.out.println(mapLocInfo);
-
-        System.out.println("[" + this.getClass().getSimpleName() + "] mapLocInfo (hashMap) initialized (size:" + getMapLocInfo().size() + ")");
+        for (String key : keyList){
+            mapLocInfo.put(key, defaultDataVars);
+        }
     }
 
     private void initMapDimVarsAsMinVal(){

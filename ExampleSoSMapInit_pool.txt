@@ -1,0 +1,6 @@
+SET(isWallVar=0);
+SET(isWallVar=0)WHERE(ALL);
+SET(isWallVar=1)WHERE(xPosVar==1);
+SET(isChargingStationVar=1)WHERE(xPosVar==2&&yPosVar==2);
+SET(isWallVar=0, isChargingStationVar=1) WHERE(xPosVar==3 && yPosVar==3);
+SET(isChargingStationVar=8,isWallVar=1) WHERE(floorVar=="FLOOR_2");
