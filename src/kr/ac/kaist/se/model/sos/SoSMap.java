@@ -106,6 +106,10 @@ public abstract class SoSMap extends _SimMap_ {
     }
 
 
+    /**
+     * A method to initialize keys of mapLoc hashmap (mapLocInfo).
+     * Initially, values of the hashmap are initialized as default values
+     */
     private void initMapLocKeys(){
         initMapDimVarsAsMinVal();
 
@@ -127,11 +131,16 @@ public abstract class SoSMap extends _SimMap_ {
             defaultDataVars.add(newDataVar);
         }
 
+        //Instead of initializing as null, defaultDataVars are used.
         for (String key : keyList){
             mapLocInfo.put(key, defaultDataVars);
         }
     }
 
+
+    /**
+     * A method to initialize dimVars of a map as minimum values
+     */
     private void initMapDimVarsAsMinVal(){
         //Set dataCurValues as minimum values allowed by their domains
         for (DimVar mapDimVar : mapDimVars){
@@ -139,6 +148,10 @@ public abstract class SoSMap extends _SimMap_ {
         }
     }
 
+    /**
+     * A method to initialize a dimvar as a minimum value
+     * @param aDimVar A dimVar to be initialized
+     */
     private void initMapDimVarAsMinVal(DimVar aDimVar){
         if (aDimVar.getVarType().equals("Int")) {
             aDimVar.setDataCurValue((int) aDimVar.getVarDomain().getDomainMinVal() + "");
@@ -148,6 +161,11 @@ public abstract class SoSMap extends _SimMap_ {
     }
 
 
+    /**
+     * A method to make string-based keys of a map hashmap (mapLocInfo)
+     * @param varIndex  An index to recursively generate keys
+     * @return  A list of keys generated
+     */
     private ArrayList<String> makeKeyString(int varIndex){
 
         ArrayList<String> thisKeyList = new ArrayList<>();
@@ -192,45 +210,6 @@ public abstract class SoSMap extends _SimMap_ {
 
 
 
-
-//    private String makeKeyString(){
-//    }
-
-//    private String attachKeyString(ArrayList<String> keyList, int varIndex){
-//
-////        int dimIndex = 0;
-////        String key = "";
-//
-//        while (mapDimVars.get(varIndex).checkUpdateValid(0)){
-//
-//            System.out.println((varIndex+1) + "|" + mapDimVars.size());
-//
-//            String curDimVarVal = mapDimVars.get(varIndex).getDataCurValue();
-//
-////            boolean isInsideOfDomain = ;
-////            if (!isInsideOfDomain) {
-////                System.out.println("outOfDomain");
-////                return "";
-////            }
-//
-//            //If this varIndex is the last
-//            if (varIndex + 1 >= mapDimVars.size()){
-//                System.out.println(curDimVarVal);
-////                keyList.add(curDimVarVal);
-//
-//                return curDimVarVal;
-//            }
-//            //If a next DimVar exists
-//            else{
-////                keyList.add(curDimVarVal + attachKeyString(keyList, varIndex++));
-//                return curDimVarVal + attachKeyString(keyList, varIndex++);
-//            }
-//
-//            mapDimVars.get(varIndex).updateValueOfDim(1);
-//
-//        }
-//
-//    }
 
     /**
      * A method to add a DimVar into mapDimVars

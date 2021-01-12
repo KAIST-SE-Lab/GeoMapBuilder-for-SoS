@@ -32,8 +32,8 @@ public class ExampleSoSMap extends SoSMap {
             - floor: enum ("FLOOR_1", "FLOOR_2", "FLOOR_3")
          */
 
-        DimVarDomain xPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
-        DimVarDomain yPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
+        DimVarDomain xPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 2);
+        DimVarDomain yPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 2);
         DimVarDomain floorDomain = new DimVarDomain(EnumDomainType.ENUMERATION, new ArrayList<String>(Arrays.asList("FLOOR_1", "FLOOR_2", "FLOOR_3")));
 
         MapCoordinateDimType xPosDimVar = new MapCoordinateDimType(
@@ -79,7 +79,8 @@ public class ExampleSoSMap extends SoSMap {
 
 
         DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
-        DataVarDomain isChargingStation = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,10);
+        DataVarDomain isChargingStationDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
+        DataVarDomain dustLevelDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 100);
 
         DataVar isWallVar = new DataVar(
                 "isWallVar",
@@ -95,10 +96,19 @@ public class ExampleSoSMap extends SoSMap {
                 "Int",
                 "0",
                 "0",
-                isChargingStation);
+                isChargingStationDomain);
+
+        DataVar dustLevelVar = new DataVar(
+                "dustLevelVar",
+                "dustLevelVar",
+                "Int",
+                "0",
+                "0",
+                dustLevelDomain);
 
         addDataVar(isWallVar);
         addDataVar(isChargingStationVar);
+        addDataVar(dustLevelVar);
 
         System.out.println("[" + this.getClass().getSimpleName() + "] mapDataVar initialized (size:" + getMapDataVars().size() + ")");
     }

@@ -136,7 +136,7 @@ public class MapBuilder {
             }
 
 
-            System.out.println("updateMapData Query: " + mapInitQuery);
+            System.out.println("\nupdateMapData Query: " + mapInitQuery);
             printMapLocHashMap(mapLocInfoToBeUpdated);
 
         }
@@ -372,7 +372,7 @@ public class MapBuilder {
      */
     private void printMapLocHashMap(HashMap<String, ArrayList<DataVar>> mapLocHashMap) {
         for (HashMap.Entry<String, ArrayList<DataVar>> pair : mapLocHashMap.entrySet()) {
-            System.out.print(pair.getKey() + "|");
+            System.out.print("\t" + pair.getKey() + "|");
             for (DataVar aDataVar : pair.getValue()) {
                 System.out.print(aDataVar.getVarId() + "(" + aDataVar.getDataCurValue() + ")");
             }
