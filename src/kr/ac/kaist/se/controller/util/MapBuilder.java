@@ -9,32 +9,51 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * A class to build, initialize, and update a map
+ *
+ * @author ymbaek
+ */
 public class MapBuilder {
 
     public MapBuilder() {
 
     }
 
+    /**
+     * A method to update map data hashmap,
+     * based on mapInitString (initialization queries), mapDimVars, and mapDataVars
+     *
+     * @param mapInitString         String-based initialization queries
+     * @param mapLocInfoToBeUpdated A hashmap to be initialized
+     * @param mapDimVars            Dimension variables of a map
+     * @param mapDataVars           Data variables of a map
+     */
     public void updateMapData(String mapInitString,
                               HashMap<String, ArrayList<DataVar>> mapLocInfoToBeUpdated,
                               ArrayList<DimVar> mapDimVars,
                               ArrayList<DataVar> mapDataVars) {
 
-        Set<String> wholeKeySet = mapLocInfoToBeUpdated.keySet();
-        ArrayList<String> matchingKeySet;
+        /* Hashmap-related variables */
+        Set<String> wholeKeySet = mapLocInfoToBeUpdated.keySet();   //A set of keys from mapLocInfo of a map
+        ArrayList<String> matchingKeySet;                           //Matching keys to be updated
 
+        /* Input query for initialization/update */
         ArrayList<String> mapInitQueryList = new ArrayList<>(Arrays.asList(mapInitString.trim().split(";")));
 
-        System.out.println();
-
-        //Trim for every query
+        //For every query divided by ";"
         for (String mapInitQuery : mapInitQueryList) {
-            String setString = "";
-            String whereString = "";
+            //Trim for every query
+            mapInitQuery = mapInitQuery.trim();
 
-            ArrayList<String> datavarAssignmentClauses = new ArrayList<>();
-            ArrayList<String> dimvarConditionClauses = new ArrayList<>();
+            String setString = "";      //SET(setString)
+            String whereString = "";    //WHERE(whereString)
 
+            /* Clauses parsed from the query (mapInitQuery) */
+            ArrayList<String> datavarAssignmentClauses = new ArrayList<>(); //Assignment queries for dataVars
+            ArrayList<String> dimvarConditionClauses = new ArrayList<>();   //Conditions of dimVars
+
+            /* Indices and values of conDimVars and dataVars */
             ArrayList<Integer> condDimVarIndices = new ArrayList<>();
             ArrayList<String> condDimVarValues = new ArrayList<>();
 
@@ -44,19 +63,19 @@ public class MapBuilder {
             //List of datavars to be stored in the hashmap (mapLocInfoToBeUpdated)
             ArrayList<DataVar> locDataVars = new ArrayList<>();
 
-            mapInitQuery = mapInitQuery.trim();
 
-            /* Get setString (SET(setString)) */
+
+            /* PHASE 01. Get setString (SET(setString)) */
             setString = mapInitQuery.split("WHERE")[0].split("SET")[1].trim();
             setString = setString.replace("(", "").replace(")", "").trim();
 
             trimStrings(new ArrayList<>(Arrays.asList(setString.split(","))), datavarAssignmentClauses);
-//            System.out.println(datavarAssignmentClauses);
 
+
+            /* PHASE 02. Check conditions based on whereString */
 
             //If there is WHERE clause, we have to check <dimvarConditionClauses(s)>
             if (mapInitQuery.contains("WHERE")) {
-
 
                 /* Get whereString (WHERE(whereString)) */
                 whereString = mapInitQuery.split("WHERE")[1].trim();
@@ -71,34 +90,31 @@ public class MapBuilder {
                     //Matching keys are found based on dimvarConditions
                     matchingKeySet = findMatchingKeys(wholeKeySet, condDimVarIndices, condDimVarValues);
 
-//                    System.out.println(matchingKeySet);
-
-                    parseDataVarAssignmentClauses(datavarAssignmentClauses, mapDataVars, dataVarIndices, dataVarValues);
-
-                    updateLocDataVars(matchingKeySet, mapLocInfoToBeUpdated, locDataVars, dataVarIndices, dataVarValues);
-
-//                    setLocDataVars(mapDataVars, dataVarIndices, dataVarValues, locDataVars);
-//
-//                    for (String matchingKey : matchingKeySet){
-//                        mapLocInfoToBeUpdated.put(matchingKey, locDataVars);
-//                    }
-
+                    //Update the hashmap (mapLocInfoToBeUpdated)
+                    updateDataVarsOfHashMap(datavarAssignmentClauses,
+                            mapDataVars,
+                            matchingKeySet,
+                            mapLocInfoToBeUpdated,
+                            locDataVars,
+                            dataVarIndices,
+                            dataVarValues);
 
                 }
                 //WHERE(ALL)
-                else{
+                else {
                     //In this case, parsing dimVarConditions (where clause) is not needed.
                     //Since this is for all points, wholeKeySet itself will be matchingKeySet
                     matchingKeySet = new ArrayList<>(wholeKeySet);
 
-                    parseDataVarAssignmentClauses(datavarAssignmentClauses, mapDataVars, dataVarIndices, dataVarValues);
+                    //Update the hashmap (mapLocInfoToBeUpdated)
+                    updateDataVarsOfHashMap(datavarAssignmentClauses,
+                            mapDataVars,
+                            matchingKeySet,
+                            mapLocInfoToBeUpdated,
+                            locDataVars,
+                            dataVarIndices,
+                            dataVarValues);
 
-                    updateLocDataVars(matchingKeySet, mapLocInfoToBeUpdated, locDataVars, dataVarIndices, dataVarValues);
-//                    setLocDataVars(mapDataVars, dataVarIndices, dataVarValues, locDataVars);
-
-                    for (String matchingKey : matchingKeySet){
-                        mapLocInfoToBeUpdated.put(matchingKey, locDataVars);
-                    }
                 }
 
             }
@@ -108,58 +124,64 @@ public class MapBuilder {
                 //Since this is for all points, wholeKeySet itself will be matchingKeySet
                 matchingKeySet = new ArrayList<>(wholeKeySet);
 
-                parseDataVarAssignmentClauses(datavarAssignmentClauses, mapDataVars, dataVarIndices, dataVarValues);
+                //Update the hashmap (mapLocInfoToBeUpdated)
+                updateDataVarsOfHashMap(datavarAssignmentClauses,
+                        mapDataVars,
+                        matchingKeySet,
+                        mapLocInfoToBeUpdated,
+                        locDataVars,
+                        dataVarIndices,
+                        dataVarValues);
 
-                updateLocDataVars(matchingKeySet, mapLocInfoToBeUpdated, locDataVars, dataVarIndices, dataVarValues);
-//                setLocDataVars(mapDataVars, dataVarIndices, dataVarValues, locDataVars);
-
-                for (String matchingKey : matchingKeySet){
-                    mapLocInfoToBeUpdated.put(matchingKey, locDataVars);
-                }
             }
 
-//            System.out.println(mapLocInfoToBeUpdated);
 
             System.out.println("updateMapData Query: " + mapInitQuery);
             printMapLocHashMap(mapLocInfoToBeUpdated);
-//            System.out.println(mapLocInfoToBeUpdated.size());
-
-
-//            ArrayList<String> tmpList = getDimValuesFromKey("3,3,FLOOR_1");
-//            System.out.println(tmpList.size() + ":" + tmpList);
-//
-//            Set<String> keySets = mapLocInfoToBeUpdated.keySet();
-//            System.out.println(findMatchingKeys(wholeKeySet, condDimVarIndices, condDimVarValues));
-
-//            System.out.println(keySets);
-//
-
-
-
-//            System.out.println(setString + "|" + whereString + "\n");
-
-//            ArrayList<String> tmpString = new ArrayList<>(Arrays.asList(mapInitQuery.split("WHERE")));
-//            trimStrings(tmpString);
-
 
         }
     }
 
-    private void printMapLocHashMap(HashMap<String, ArrayList<DataVar>> mapLocHashMap){
-        for(HashMap.Entry<String, ArrayList<DataVar>> pair : mapLocHashMap.entrySet()){
-            System.out.print(pair.getKey() + "|");
-            for (DataVar aDataVar: pair.getValue()){
-                System.out.print(aDataVar.getVarId() + "(" + aDataVar.getDataCurValue() + ")");
-            }
-            System.out.println();
-        }
+
+    /**
+     * A method to update dataVars of a given hashmap (here, mapLocInfoToBeUpdated)
+     * @param datavarAssignmentClauses  Parsed clauses for data var assignment/update (used for parseDataVarAssignmentClauses)
+     * @param mapDataVars               dataVars of a map (used for parseDataVarAssignmentClauses)
+     * @param matchingKeySet            Matching keys found (used for updateLocDataVars)
+     * @param mapLocInfoToBeUpdated     A hashmap to be updated (used for updateLocDataVars)
+     * @param locDataVars               List of datavars to be stored in the hashmap (used for updateLocDataVars)
+     * @param dataVarIndices            Indices of dataVars to be updated (used for parseDataVarAssignmentClauses, updateLocDataVars)
+     * @param dataVarValues             Values of dataVars to be updated (used for parseDataVarAssignmentClauses, updateLocDataVars)
+     */
+    private void updateDataVarsOfHashMap(ArrayList<String> datavarAssignmentClauses,
+                                         ArrayList<DataVar> mapDataVars,
+                                         ArrayList<String> matchingKeySet,
+                                         HashMap<String, ArrayList<DataVar>> mapLocInfoToBeUpdated,
+                                         ArrayList<DataVar> locDataVars,
+                                         ArrayList<Integer> dataVarIndices,
+                                         ArrayList<String> dataVarValues){
+
+        //Parse clauses for dataVar assignment
+        parseDataVarAssignmentClauses(datavarAssignmentClauses, mapDataVars, dataVarIndices, dataVarValues);
+
+        //Actually update locDataVars
+        updateLocDataVars(matchingKeySet, mapLocInfoToBeUpdated, locDataVars, dataVarIndices, dataVarValues);
     }
 
 
+
+
+    /**
+     * A method to parse clauses of dimVar conditions (e.g., xPosVar==1&&yPosVar==2)
+     * @param dimvarConditionClauses    Parsed clauses for representing conditions of dimVars
+     * @param mapDimVars                dimVars of a map
+     * @param condDimVarIndices         Indices of dimVars to be checked
+     * @param condDimVarValues          Values of dimVars to be checked
+     */
     private void parseDimVarConditionClauses(ArrayList<String> dimvarConditionClauses,
                                              ArrayList<DimVar> mapDimVars,
                                              ArrayList<Integer> condDimVarIndices,
-                                             ArrayList<String> condDimVarValues){
+                                             ArrayList<String> condDimVarValues) {
         //For each dimvarConditionClauses (e.g., xPosVar==3)
         for (String cond : dimvarConditionClauses) {
 //                        System.out.print(cond + ": ");
@@ -169,15 +191,13 @@ public class MapBuilder {
 
             //For enumeration case that contains double quotation marks (e.g., "FLOOR_B1")
             //Remove the double-quotation marks
-            if (dimValue.contains("\"")){
+            if (dimValue.contains("\"")) {
                 dimValue = dimValue.replaceAll("\"", "");
             }
 
-//                        System.out.println(dimId + "|" + dimValue);
-
             int index = 0;
-            for (DimVar mapDimVar : mapDimVars){
-                if (mapDimVar.getVarId().equals(dimId)){
+            for (DimVar mapDimVar : mapDimVars) {
+                if (mapDimVar.getVarId().equals(dimId)) {
                     condDimVarIndices.add(index);
                     condDimVarValues.add(dimValue);
                 }
@@ -186,58 +206,69 @@ public class MapBuilder {
         }
     }
 
+    /**
+     * A method to parse clauses of dataVar assignment/update (e.g., isWall=1)
+     * @param datavarAssignmentClauses  Parsed clauses for data var assignment/update
+     * @param mapDataVars               dataVars of a map
+     * @param dataVarIndices            Indices of dataVars to be updated
+     * @param dataVarValues             Values of dataVars to be updated
+     */
     private void parseDataVarAssignmentClauses(ArrayList<String> datavarAssignmentClauses,
                                                ArrayList<DataVar> mapDataVars,
                                                ArrayList<Integer> dataVarIndices,
-                                               ArrayList<String> dataVarValues){
+                                               ArrayList<String> dataVarValues) {
 
-        for (String assignmentQuery : datavarAssignmentClauses){
-//                        System.out.print(assignmentQuery + ": ");
+        for (String assignmentQuery : datavarAssignmentClauses) {
 
             String dataVarId = assignmentQuery.split("=")[0].trim();
             String dataVarValue = assignmentQuery.split("=")[1].trim();
 
             //For enumeration case that contains double quotation marks (e.g., "FLOOR_B1")
             //Remove the double-quotation marks
-            if (dataVarValue.contains("\"")){
+            if (dataVarValue.contains("\"")) {
                 dataVarValue = dataVarValue.replaceAll("\"", "");
             }
 
             int index = 0;
-            for (DataVar mapDataVar : mapDataVars){
-                if (mapDataVar.getVarId().equals(dataVarId)){
+            for (DataVar mapDataVar : mapDataVars) {
+                if (mapDataVar.getVarId().equals(dataVarId)) {
                     dataVarIndices.add(index);
                     dataVarValues.add(dataVarValue);
                 }
                 index++;
             }
 
-//                        System.out.println(dataVarId + "|" + dataVarValue);
-
-
         }
     }
 
 
+    /**
+     * A method to actually update dataVars of hashMap data
+     * @param matchingKeySet            Matching keys found
+     * @param mapLocInfoToBeUpdated     A hashmap to be updated
+     * @param locDataVars               List of datavars to be stored in the hashmap
+     * @param dataVarIndices            Indices of dataVars to be updated
+     * @param dataVarValues             Values of dataVars to be updated
+     */
     private void updateLocDataVars(ArrayList<String> matchingKeySet,
                                    HashMap<String, ArrayList<DataVar>> mapLocInfoToBeUpdated,
                                    ArrayList<DataVar> locDataVars,
                                    ArrayList<Integer> dataVarIndices,
-                                   ArrayList<String> dataVarValues){
-        for (String matchingKey : matchingKeySet){
+                                   ArrayList<String> dataVarValues) {
+        for (String matchingKey : matchingKeySet) {
             ArrayList<DataVar> dataVars = mapLocInfoToBeUpdated.get(matchingKey);
 
             locDataVars.clear();
 
             int dataVarIndex = 0;
-            for (DataVar dataVar : dataVars){
+            for (DataVar dataVar : dataVars) {
 
-                DataVar newDataVar = (DataVar)dataVar.clone();
+                DataVar newDataVar = (DataVar) dataVar.clone();
 
                 int innerIndex = 0;
-                for (Integer index : dataVarIndices){
+                for (Integer index : dataVarIndices) {
 
-                    if (dataVarIndex == index){
+                    if (dataVarIndex == index) {
                         newDataVar.setDataCurValue(dataVarValues.get(innerIndex));
                     }
 
@@ -247,69 +278,37 @@ public class MapBuilder {
                 locDataVars.add(newDataVar);
             }
 
-//            System.out.println(matchingKey + "|" + locDataVars);
             mapLocInfoToBeUpdated.put(matchingKey, locDataVars);
         }
     }
 
-//    private void setLocDataVars(ArrayList<DataVar> mapDataVars,
-//                                ArrayList<Integer> dataVarIndices,
-//                                ArrayList<String> dataVarValues,
-//                                ArrayList<DataVar> locDataVars){
-//
-//
-//        int dataVarIndex = 0;
-//        for (DataVar dataVar : mapDataVars){
-//
-//            DataVar newDataVar = new DataVar(
-//                    dataVar.getVarId(),
-//                    dataVar.getVarName(),
-//                    dataVar.getVarType(),
-//                    dataVar.getDataDefaultValue(),
-//                    dataVar.getDataCurValue(),
-//                    dataVar.getVarDomain()
-//            );
-//
-//            int innerIndex = 0;
-//            for (Integer index : dataVarIndices){
-//                if (dataVarIndex == index){
-////                    System.out.println(dataVarIndex); //1
-//                    newDataVar.setDataCurValue(dataVarValues.get(innerIndex));
-//                }
-////                            mapDataVars.get(index).
-//                innerIndex++;
-//            }
-//            dataVarIndex++;
-//
-//            locDataVars.add(newDataVar);
-//        }
-//    }
 
     /**
      * A method to find a list(set) of matching keys from a whole key sets,
      * based on varIndices and varValues.
-     * @param wholeKeySets  A pool that has a whole set of keys
-     * @param varIndices    List of indices contained in dimvar_cond (1 if yPosVar==3)
-     * @param varValues     List of values contained in dimvar_cond (3 if yPosVar==3)
-     * @return
+     *
+     * @param wholeKeySets A pool that has a whole set of keys
+     * @param varIndices   List of indices contained in dimvar_cond (1 if yPosVar==3)
+     * @param varValues    List of values contained in dimvar_cond (3 if yPosVar==3)
+     * @return  Matching keys found
      */
-    private ArrayList<String> findMatchingKeys(Set<String> wholeKeySets, ArrayList<Integer> varIndices, ArrayList<String> varValues){
+    private ArrayList<String> findMatchingKeys(Set<String> wholeKeySets, ArrayList<Integer> varIndices, ArrayList<String> varValues) {
         ArrayList<String> matchingKeys = new ArrayList<>();
         boolean isMatching;
 
-        for (String key : wholeKeySets){
+        for (String key : wholeKeySets) {
             isMatching = true;
 
             int varIndicesIndex = 0;
-            for (Integer index : varIndices){
+            for (Integer index : varIndices) {
                 //If the key matches the given condition
-                if (!(getDimValuesFromKey(key).get(index).equals(varValues.get(varIndicesIndex)))){
+                if (!(getDimValuesFromKey(key).get(index).equals(varValues.get(varIndicesIndex)))) {
                     isMatching = false;
                 }
                 varIndicesIndex++;
             }
 
-            if (isMatching){
+            if (isMatching) {
                 matchingKeys.add(key);
             }
         }
@@ -318,6 +317,11 @@ public class MapBuilder {
     }
 
 
+    /**
+     * A method to trim a list of string (ArrayList<String>)
+     * @param stringList            List of strings
+     * @param stringListTrimmed     List of trimmed strings
+     */
     private void trimStrings(ArrayList<String> stringList, ArrayList<String> stringListTrimmed) {
         for (String aString : stringList) {
             stringListTrimmed.add(aString.trim());
@@ -343,21 +347,36 @@ public class MapBuilder {
 
     /**
      * A method to create a key string based on a list of strings (dimValues)
+     *
      * @param dimValues a list that stores string values for every dim
      * @return key string generated
      */
-    private String makeKeyFromDimValue(ArrayList<String> dimValues){
+    private String makeKeyFromDimValue(ArrayList<String> dimValues) {
         String keyToBeReturned = "";
 
         int index = 0;
-        for (String dimValue : dimValues){
+        for (String dimValue : dimValues) {
             keyToBeReturned += dimValue;
-            if (index + 1 < dimValues.size()){
+            if (index + 1 < dimValues.size()) {
                 keyToBeReturned += ",";
             }
             index++;
         }
 
         return keyToBeReturned;
+    }
+
+    /**
+     * A method to print a mapLocInfo hashmap
+     * @param mapLocHashMap A hashmap to be printed
+     */
+    private void printMapLocHashMap(HashMap<String, ArrayList<DataVar>> mapLocHashMap) {
+        for (HashMap.Entry<String, ArrayList<DataVar>> pair : mapLocHashMap.entrySet()) {
+            System.out.print(pair.getKey() + "|");
+            for (DataVar aDataVar : pair.getValue()) {
+                System.out.print(aDataVar.getVarId() + "(" + aDataVar.getDataCurValue() + ")");
+            }
+            System.out.println();
+        }
     }
 }
