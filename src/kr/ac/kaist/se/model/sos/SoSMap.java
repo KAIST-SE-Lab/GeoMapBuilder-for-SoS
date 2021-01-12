@@ -1,7 +1,6 @@
 package kr.ac.kaist.se.model.sos;
 
 import kr.ac.kaist.se.controller.util.MapBuilder;
-import kr.ac.kaist.se.controller.util.MapFileReader;
 import kr.ac.kaist.se.model.abst.geo._SimMap_;
 import kr.ac.kaist.se.model.sos.var.DataVar;
 import kr.ac.kaist.se.model.sos.var.DimVar;
@@ -9,11 +8,15 @@ import kr.ac.kaist.se.model.sos.var.DimVar;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /**
  * A class to represent a geographical map of an SoS
  * @author ymbaek
  */
 public abstract class SoSMap extends _SimMap_ {
+
+    /** Input file for map initialization (.txt) */
+    protected String mapInitFile;
 
     /** ArrayLists for MapDimensions and MapInformation */
     private ArrayList<DimVar> mapDimVars = new ArrayList<>();         //LocDimensions of this map
@@ -27,37 +30,41 @@ public abstract class SoSMap extends _SimMap_ {
 
 
 
-    public SoSMap(String mapId, String mapName) {
+    public SoSMap(String mapId, String mapName, String mapInitFileName) {
         super(mapId, mapName);
-        initMap();
+        this.mapInitFile = mapInitFileName;
+
+        initMap(mapInitFileName);
     }
 
     public SoSMap(String mapId,
                   String mapName,
                   ArrayList<DimVar> mapDimVars,
-                  ArrayList<DataVar> mapDataVars) {
+                  ArrayList<DataVar> mapDataVars,
+                  String mapInitFileName) {
         super(mapId, mapName);
         this.mapDimVars = mapDimVars;
         this.mapDataVars = mapDataVars;
+        this.mapInitFile = mapInitFileName;
 
-        initMap();
+        initMap(mapInitFileName);
     }
 
     /**
      * Initialization of a map by calling other methods
      */
-    protected void initMap(){
+    protected void initMap(String mapInitFileName){
         /* Initialization of map dimensions (mapDimVars) */
         initMapDimensions();
 
         /* Initialization of map data variables (mapDataVars) */
         initMapInformation();
 
-        /* Initialization of map location information (mapLocInfo) */
-        initMapLocInfo();
+        if (!(mapInitFileName.equals("nofile") || mapInitFileName.equals(""))) {
+            /* Initialization of map location information (mapLocInfo) */
+            initMapLocInfo(mapInitFileName);
+        }
 
-        //TODO: MapBuilder
-//        mapBuilder.updateMapData(mapDimVars, mapDataVars, mapLocInfo, new ArrayList<String>());
     }
 
 
@@ -76,8 +83,9 @@ public abstract class SoSMap extends _SimMap_ {
 
     /**
      * A method to initially assign data values into mapLocInfo hashmap.
+     * This mathod is called only if there is a file for the initialization.
      */
-    protected void initMapLocInfo(){
+    protected void initMapLocInfo(String mapInitFileName){
 
         /*
         EX) xPosVar, yPosVar, floorNumVar:
@@ -90,17 +98,8 @@ public abstract class SoSMap extends _SimMap_ {
 
         initMapLocKeys();
 
-        String fileName = "ExampleSoSMapInit.txt";
-
-        MapFileReader fileReader = new MapFileReader();
-        String mapInitString = fileReader.readMapFile(fileName);
-
-        mapBuilder = new MapBuilder();
-        mapBuilder.updateMapData(mapInitString, mapLocInfo, mapDimVars, mapDataVars);
-
-
-
-//        System.out.println(mapLocInfo);
+        mapBuilder = new MapBuilder(mapInitFileName, mapLocInfo);
+        mapBuilder.updateMapData(mapDimVars, mapDataVars);
 
         System.out.println("[" + this.getClass().getSimpleName() + "] mapLocInfo (hashMap) initialized (size:" + getMapLocInfo().size() + ")");
     }
@@ -320,5 +319,14 @@ public abstract class SoSMap extends _SimMap_ {
 
     public void setMapLocInfo(HashMap<String, ArrayList<DataVar>> mapLocInfo) {
         this.mapLocInfo = mapLocInfo;
+    }
+
+    /**
+     * Get a list of locData with a key
+     * @param key   a key to be searched
+     * @return      A list of locData objects
+     */
+    public ArrayList<DataVar> getLocDataWithKey(String key){
+        return this.mapLocInfo.get(key);
     }
 }

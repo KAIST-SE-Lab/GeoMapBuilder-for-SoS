@@ -16,8 +16,12 @@ import java.util.Arrays;
  */
 public class ExampleSoSMap extends SoSMap {
 
-    public ExampleSoSMap(String mapId, String mapName) {
-        super(mapId, mapName);
+    public ExampleSoSMap(String mapId, String mapName, String mapInitFileName) {
+        super(mapId, mapName, mapInitFileName);
+    }
+
+    public ExampleSoSMap(String mapId, String mapName, ArrayList<DimVar> mapDimVars, ArrayList<DataVar> mapDataVars, String mapInitFileName) {
+        super(mapId, mapName, mapDimVars, mapDataVars, mapInitFileName);
     }
 
     @Override
@@ -34,7 +38,8 @@ public class ExampleSoSMap extends SoSMap {
 
         DimVarDomain xPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 2);
         DimVarDomain yPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 2);
-        DimVarDomain floorDomain = new DimVarDomain(EnumDomainType.ENUMERATION, new ArrayList<String>(Arrays.asList("FLOOR_1", "FLOOR_2", "FLOOR_3")));
+//        DimVarDomain floorDomain = new DimVarDomain(EnumDomainType.ENUMERATION, new ArrayList<String>(Arrays.asList("FLOOR_1", "FLOOR_2", "FLOOR_3")));
+        DimVarDomain floorDomain = new DimVarDomain(EnumDomainType.ENUMERATION, new ArrayList<String>(Arrays.asList("FLOOR_1")));
 
         MapCoordinateDimType xPosDimVar = new MapCoordinateDimType(
                 "xPosVar",
@@ -72,11 +77,11 @@ public class ExampleSoSMap extends SoSMap {
         /*
         This method is automatically called by SoSMap.
 
-        This ExampleSoSMap has two data variables:
-            - isWallDomain: boolean (0,1)
-            - isChargingStation: boolean (0,1)
+        This ExampleSoSMap has three dataVars:
+            - isWallVar: boolean [0,1]
+            - isChargingStationVar: boolean [0,1]
+            - dustLevelVar: int [0,100]
          */
-
 
         DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
         DataVarDomain isChargingStationDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);

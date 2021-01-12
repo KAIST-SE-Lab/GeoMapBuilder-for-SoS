@@ -13,16 +13,26 @@ import java.util.ArrayList;
  */
 public class ExampleObjectType extends Entity {
 
-    public ExampleObjectType(SoS mySoS,
-                             String id,
-                             String name,
-                             ObjectLocation objLocation) {
+    public ExampleObjectType(SoS mySoS, String id, String name) {
+        super(mySoS, id, name);
+    }
+
+    public ExampleObjectType(SoS mySoS, String id, String name, String objLocation) {
         super(mySoS, id, name, objLocation);
     }
 
-
     @Override
     protected void initObjLocation() {
+
+    }
+
+    @Override
+    protected void initActions() {
+
+    }
+
+    @Override
+    protected void selectActions() {
 
     }
 }

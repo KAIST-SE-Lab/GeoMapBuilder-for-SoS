@@ -16,7 +16,20 @@ import java.util.Set;
  */
 public class MapBuilder {
 
-    public MapBuilder() {
+    private MapFileReader fileReader;
+    private MapKeyManager keyManager;
+
+    private HashMap<String, ArrayList<DataVar>> mapLocInfoToBeUpdated;
+
+    private String mapInitString;
+
+    public MapBuilder(String mapInitFileName,
+                      HashMap<String, ArrayList<DataVar>> mapLocInfo) {
+        this.mapLocInfoToBeUpdated = mapLocInfo;
+
+        fileReader = new MapFileReader();
+        mapInitString = fileReader.readMapFile(mapInitFileName);
+
 
     }
 
@@ -24,15 +37,13 @@ public class MapBuilder {
      * A method to update map data hashmap,
      * based on mapInitString (initialization queries), mapDimVars, and mapDataVars
      *
-     * @param mapInitString         String-based initialization queries
-     * @param mapLocInfoToBeUpdated A hashmap to be initialized
      * @param mapDimVars            Dimension variables of a map
      * @param mapDataVars           Data variables of a map
      */
-    public void updateMapData(String mapInitString,
-                              HashMap<String, ArrayList<DataVar>> mapLocInfoToBeUpdated,
-                              ArrayList<DimVar> mapDimVars,
+    public void updateMapData(ArrayList<DimVar> mapDimVars,
                               ArrayList<DataVar> mapDataVars) {
+
+        keyManager = new MapKeyManager(mapLocInfoToBeUpdated, mapDimVars);
 
         /* Hashmap-related variables */
         Set<String> wholeKeySet = mapLocInfoToBeUpdated.keySet();   //A set of keys from mapLocInfo of a map
@@ -94,7 +105,6 @@ public class MapBuilder {
                     updateDataVarsOfHashMap(datavarAssignmentClauses,
                             mapDataVars,
                             matchingKeySet,
-                            mapLocInfoToBeUpdated,
                             locDataVars,
                             dataVarIndices,
                             dataVarValues);
@@ -110,13 +120,11 @@ public class MapBuilder {
                     updateDataVarsOfHashMap(datavarAssignmentClauses,
                             mapDataVars,
                             matchingKeySet,
-                            mapLocInfoToBeUpdated,
                             locDataVars,
                             dataVarIndices,
                             dataVarValues);
 
                 }
-
             }
             //If there is no WHERE clause, it means ALL
             else if (!mapInitQuery.contains("WHERE")) {
@@ -128,13 +136,10 @@ public class MapBuilder {
                 updateDataVarsOfHashMap(datavarAssignmentClauses,
                         mapDataVars,
                         matchingKeySet,
-                        mapLocInfoToBeUpdated,
                         locDataVars,
                         dataVarIndices,
                         dataVarValues);
-
             }
-
 
             System.out.println("\nupdateMapData Query: " + mapInitQuery);
             printMapLocHashMap(mapLocInfoToBeUpdated);
@@ -148,7 +153,6 @@ public class MapBuilder {
      * @param datavarAssignmentClauses  Parsed clauses for data var assignment/update (used for parseDataVarAssignmentClauses)
      * @param mapDataVars               dataVars of a map (used for parseDataVarAssignmentClauses)
      * @param matchingKeySet            Matching keys found (used for updateLocDataVars)
-     * @param mapLocInfoToBeUpdated     A hashmap to be updated (used for updateLocDataVars)
      * @param locDataVars               List of datavars to be stored in the hashmap (used for updateLocDataVars)
      * @param dataVarIndices            Indices of dataVars to be updated (used for parseDataVarAssignmentClauses, updateLocDataVars)
      * @param dataVarValues             Values of dataVars to be updated (used for parseDataVarAssignmentClauses, updateLocDataVars)
@@ -156,7 +160,6 @@ public class MapBuilder {
     private void updateDataVarsOfHashMap(ArrayList<String> datavarAssignmentClauses,
                                          ArrayList<DataVar> mapDataVars,
                                          ArrayList<String> matchingKeySet,
-                                         HashMap<String, ArrayList<DataVar>> mapLocInfoToBeUpdated,
                                          ArrayList<DataVar> locDataVars,
                                          ArrayList<Integer> dataVarIndices,
                                          ArrayList<String> dataVarValues){
@@ -165,7 +168,7 @@ public class MapBuilder {
         parseDataVarAssignmentClauses(datavarAssignmentClauses, mapDataVars, dataVarIndices, dataVarValues);
 
         //Actually update locDataVars
-        updateLocDataVars(matchingKeySet, mapLocInfoToBeUpdated, locDataVars, dataVarIndices, dataVarValues);
+        updateLocDataVars(matchingKeySet, locDataVars, dataVarIndices, dataVarValues);
     }
 
 
@@ -245,13 +248,11 @@ public class MapBuilder {
     /**
      * A method to actually update dataVars of hashMap data
      * @param matchingKeySet            Matching keys found
-     * @param mapLocInfoToBeUpdated     A hashmap to be updated
      * @param locDataVars               List of datavars to be stored in the hashmap
      * @param dataVarIndices            Indices of dataVars to be updated
      * @param dataVarValues             Values of dataVars to be updated
      */
     private void updateLocDataVars(ArrayList<String> matchingKeySet,
-                                   HashMap<String, ArrayList<DataVar>> mapLocInfoToBeUpdated,
                                    ArrayList<DataVar> locDataVars,
                                    ArrayList<Integer> dataVarIndices,
                                    ArrayList<String> dataVarValues) {
@@ -302,7 +303,7 @@ public class MapBuilder {
             int varIndicesIndex = 0;
             for (Integer index : varIndices) {
                 //If the key matches the given condition
-                if (!(getDimValuesFromKey(key).get(index).equals(varValues.get(varIndicesIndex)))) {
+                if (!(keyManager.getDimValuesFromKey(key).get(index).equals(varValues.get(varIndicesIndex)))) {
                     isMatching = false;
                 }
                 varIndicesIndex++;
@@ -328,43 +329,7 @@ public class MapBuilder {
         }
     }
 
-    /**
-     * A method to get dim values from string-based key (e.g., 3,2,FLOOR_3)
-     * Size of returned list should be same as dimVarList.size()
-     *
-     * @param key key to be decomposed
-     * @return A list of dim values of the given key
-     */
-    private ArrayList<String> getDimValuesFromKey(String key) {
-        ArrayList<String> dimValListTrimmed = new ArrayList<>();
-        ArrayList<String> dimValList = new ArrayList<>(Arrays.asList(key.split(",")));
 
-        //Trim the value strings
-        trimStrings(dimValList, dimValListTrimmed);
-
-        return dimValListTrimmed;
-    }
-
-    /**
-     * A method to create a key string based on a list of strings (dimValues)
-     *
-     * @param dimValues a list that stores string values for every dim
-     * @return key string generated
-     */
-    private String makeKeyFromDimValue(ArrayList<String> dimValues) {
-        String keyToBeReturned = "";
-
-        int index = 0;
-        for (String dimValue : dimValues) {
-            keyToBeReturned += dimValue;
-            if (index + 1 < dimValues.size()) {
-                keyToBeReturned += ",";
-            }
-            index++;
-        }
-
-        return keyToBeReturned;
-    }
 
     /**
      * A method to print a mapLocInfo hashmap

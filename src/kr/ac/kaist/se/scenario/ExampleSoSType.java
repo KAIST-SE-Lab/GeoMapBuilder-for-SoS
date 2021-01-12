@@ -16,7 +16,7 @@ public class ExampleSoSType extends SoS {
 
     public ExampleSoSType(String id,
                           String name,
-                          ObjectLocation objLocation,
+                          String objLocation,
                           SoSMap sosMap,
                           ArrayList<Entity> memberEntityList) {
         super(id, name, objLocation, sosMap, memberEntityList);
@@ -24,7 +24,18 @@ public class ExampleSoSType extends SoS {
 
     @Override
     protected void initSoSModel() {
+        //Declaration and instantiation of simobjects
+        ExampleObjectType obj01 = new ExampleObjectType(this,
+                "OBJ_01",
+                "OBJ_01");
 
+        ExampleObjectType obj02 = new ExampleObjectType(this,
+                "OBJ_02",
+                "OBJ_02");
+
+
+        addMemberEntity(obj01);
+        addMemberEntity(obj02);
     }
 
     @Override
@@ -32,4 +43,8 @@ public class ExampleSoSType extends SoS {
 
     }
 
+    @Override
+    protected void initObjLocation() {
+
+    }
 }

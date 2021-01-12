@@ -22,13 +22,25 @@ public abstract class _SimObject_ implements Simulatable {
 
     /** Geo-location information */
     //Current location of this object
-    protected ObjectLocation objLocation;
+    protected String objLocation;
 
-    public _SimObject_(String id, String name, ObjectLocation objLocation) {
+    public _SimObject_(String id, String name) {
+        this.id = id;
+        this.name = name;
+
+        objLocation = null;
+    }
+
+    public _SimObject_(String id, String name, String objLocation) {
         this.id = id;
         this.name = name;
         this.objLocation = objLocation;
     }
+
+    /**
+     * Initialization of object location
+     */
+    protected abstract void initObjLocation();
 
 
     /* Getters & Setters */
@@ -49,11 +61,11 @@ public abstract class _SimObject_ implements Simulatable {
         this.name = name;
     }
 
-    public ObjectLocation getObjLocation() {
+    public String getObjLocation() {
         return objLocation;
     }
 
-    public void setObjLocation(ObjectLocation objLocation) {
+    public void setObjLocation(String objLocation) {
         this.objLocation = objLocation;
     }
 }
