@@ -5,6 +5,7 @@ import kr.ac.kaist.se.model.sos.Entity;
 import kr.ac.kaist.se.model.sos.ObjectLocation;
 import kr.ac.kaist.se.model.sos.var.DataVar;
 import kr.ac.kaist.se.model.sos.var.DimVar;
+import kr.ac.kaist.se.scenario.ExampleObjectType;
 import kr.ac.kaist.se.scenario.ExampleSoSMap;
 import kr.ac.kaist.se.scenario.ExampleSoSType;
 
@@ -18,25 +19,24 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main (String []args){
-        //TODO: dimVarList, dataVarList
-//        ExampleSoSMap sosMap = new ExampleSoSMap("SOSMAP01",
-//                "EXAMPLE_SOS_MAP",
-//                new ArrayList<DimVar>(),
-//                new ArrayList<DataVar>());
 
-
-
+        /* Initialization of a map */
         ExampleSoSMap sosMap = new ExampleSoSMap("SOSMAP01",
-                "EXAMPLE_SOS_MAP");
+                "EXAMPLE_SOS_MAP", "ExampleSoSMapInit.txt");
 
+        /* Initialization of a sim model */
+        //Declaration and instantiation of an SoS object
         ExampleSoSType sos = new ExampleSoSType("SOS01",
                 "EXAMPLE_SOS",
-                new ObjectLocation(),
+                "",
                 sosMap,
                 new ArrayList<Entity>());
+
 
         SimEngine simEngine = new SimEngine(sos);
         simEngine.startSimulation();
     }
+
+
 
 }

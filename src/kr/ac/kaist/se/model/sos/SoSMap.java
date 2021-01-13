@@ -8,11 +8,15 @@ import kr.ac.kaist.se.model.sos.var.DimVar;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /**
  * A class to represent a geographical map of an SoS
  * @author ymbaek
  */
 public abstract class SoSMap extends _SimMap_ {
+
+    /** Input file for map initialization (.txt) */
+    protected String mapInitFile;
 
     /** ArrayLists for MapDimensions and MapInformation */
     private ArrayList<DimVar> mapDimVars = new ArrayList<>();         //LocDimensions of this map
@@ -22,38 +26,45 @@ public abstract class SoSMap extends _SimMap_ {
     protected HashMap<String, ArrayList<DataVar>> mapLocInfo = new HashMap<>(); //HashMap to store location information
 
     /** MapBuilder */
-    protected MapBuilder mapBuilder = new MapBuilder(); //MapBuilder to initialize and update a map
+    protected MapBuilder mapBuilder; //MapBuilder to initialize and update a map
 
 
-    public SoSMap(String mapId, String mapName) {
+
+    public SoSMap(String mapId, String mapName, String mapInitFileName) {
         super(mapId, mapName);
-        initMap();
+        this.mapInitFile = mapInitFileName;
+
+        initMap(mapInitFileName);
     }
 
     public SoSMap(String mapId,
                   String mapName,
                   ArrayList<DimVar> mapDimVars,
-                  ArrayList<DataVar> mapDataVars) {
+                  ArrayList<DataVar> mapDataVars,
+                  String mapInitFileName) {
         super(mapId, mapName);
         this.mapDimVars = mapDimVars;
         this.mapDataVars = mapDataVars;
+        this.mapInitFile = mapInitFileName;
+
+        initMap(mapInitFileName);
     }
 
     /**
      * Initialization of a map by calling other methods
      */
-    protected void initMap(){
+    protected void initMap(String mapInitFileName){
         /* Initialization of map dimensions (mapDimVars) */
         initMapDimensions();
 
         /* Initialization of map data variables (mapDataVars) */
         initMapInformation();
 
-        /* Initialization of map location information (mapLocInfo) */
-        initMapLocInfo();
+        if (!(mapInitFileName.equals("nofile") || mapInitFileName.equals(""))) {
+            /* Initialization of map location information (mapLocInfo) */
+            initMapLocInfo(mapInitFileName);
+        }
 
-        //TODO: MapBuilder
-//        mapBuilder.updateMapData(mapDimVars, mapDataVars, mapLocInfo, new ArrayList<String>());
     }
 
 
@@ -72,8 +83,9 @@ public abstract class SoSMap extends _SimMap_ {
 
     /**
      * A method to initially assign data values into mapLocInfo hashmap.
+     * This mathod is called only if there is a file for the initialization.
      */
-    protected void initMapLocInfo(){
+    protected void initMapLocInfo(String mapInitFileName){
 
         /*
         EX) xPosVar, yPosVar, floorNumVar:
@@ -84,21 +96,50 @@ public abstract class SoSMap extends _SimMap_ {
             ...
          */
 
+        initMapLocKeys();
 
+        mapBuilder = new MapBuilder(mapInitFileName, mapLocInfo);
+        mapBuilder.updateMapData(mapDimVars, mapDataVars);
+
+        System.out.println("[" + this.getClass().getSimpleName() + "] mapLocInfo (hashMap) initialized (size:" + getMapLocInfo().size() + ")");
+    }
+
+
+    /**
+     * A method to initialize keys of mapLoc hashmap (mapLocInfo).
+     * Initially, values of the hashmap are initialized as default values
+     */
+    private void initMapLocKeys(){
         initMapDimVarsAsMinVal();
 
         //Keys to be stored in hashmap (mapLocInfo)
         ArrayList<String> keyList = makeKeyString(0);
 
-        for (String key : keyList){
-            mapLocInfo.put(key, null);
+        ArrayList<DataVar> defaultDataVars = new ArrayList<>();
+
+        for (DataVar dataVar : mapDataVars){
+            DataVar newDataVar = new DataVar(
+                    dataVar.getVarId(),
+                    dataVar.getVarName(),
+                    dataVar.getVarType(),
+                    dataVar.getDataDefaultValue(),
+                    dataVar.getDataCurValue(),
+                    dataVar.getVarDomain()
+            );
+
+            defaultDataVars.add(newDataVar);
         }
 
-        System.out.println(mapLocInfo);
-
-        System.out.println("[" + this.getClass().getSimpleName() + "] mapLocInfo (hashMap) initialized (size:" + getMapLocInfo().size() + ")");
+        //Instead of initializing as null, defaultDataVars are used.
+        for (String key : keyList){
+            mapLocInfo.put(key, defaultDataVars);
+        }
     }
 
+
+    /**
+     * A method to initialize dimVars of a map as minimum values
+     */
     private void initMapDimVarsAsMinVal(){
         //Set dataCurValues as minimum values allowed by their domains
         for (DimVar mapDimVar : mapDimVars){
@@ -106,6 +147,10 @@ public abstract class SoSMap extends _SimMap_ {
         }
     }
 
+    /**
+     * A method to initialize a dimvar as a minimum value
+     * @param aDimVar A dimVar to be initialized
+     */
     private void initMapDimVarAsMinVal(DimVar aDimVar){
         if (aDimVar.getVarType().equals("Int")) {
             aDimVar.setDataCurValue((int) aDimVar.getVarDomain().getDomainMinVal() + "");
@@ -115,6 +160,11 @@ public abstract class SoSMap extends _SimMap_ {
     }
 
 
+    /**
+     * A method to make string-based keys of a map hashmap (mapLocInfo)
+     * @param varIndex  An index to recursively generate keys
+     * @return  A list of keys generated
+     */
     private ArrayList<String> makeKeyString(int varIndex){
 
         ArrayList<String> thisKeyList = new ArrayList<>();
@@ -159,45 +209,6 @@ public abstract class SoSMap extends _SimMap_ {
 
 
 
-
-//    private String makeKeyString(){
-//    }
-
-//    private String attachKeyString(ArrayList<String> keyList, int varIndex){
-//
-////        int dimIndex = 0;
-////        String key = "";
-//
-//        while (mapDimVars.get(varIndex).checkUpdateValid(0)){
-//
-//            System.out.println((varIndex+1) + "|" + mapDimVars.size());
-//
-//            String curDimVarVal = mapDimVars.get(varIndex).getDataCurValue();
-//
-////            boolean isInsideOfDomain = ;
-////            if (!isInsideOfDomain) {
-////                System.out.println("outOfDomain");
-////                return "";
-////            }
-//
-//            //If this varIndex is the last
-//            if (varIndex + 1 >= mapDimVars.size()){
-//                System.out.println(curDimVarVal);
-////                keyList.add(curDimVarVal);
-//
-//                return curDimVarVal;
-//            }
-//            //If a next DimVar exists
-//            else{
-////                keyList.add(curDimVarVal + attachKeyString(keyList, varIndex++));
-//                return curDimVarVal + attachKeyString(keyList, varIndex++);
-//            }
-//
-//            mapDimVars.get(varIndex).updateValueOfDim(1);
-//
-//        }
-//
-//    }
 
     /**
      * A method to add a DimVar into mapDimVars
@@ -308,5 +319,14 @@ public abstract class SoSMap extends _SimMap_ {
 
     public void setMapLocInfo(HashMap<String, ArrayList<DataVar>> mapLocInfo) {
         this.mapLocInfo = mapLocInfo;
+    }
+
+    /**
+     * Get a list of locData with a key
+     * @param key   a key to be searched
+     * @return      A list of locData objects
+     */
+    public ArrayList<DataVar> getLocDataWithKey(String key){
+        return this.mapLocInfo.get(key);
     }
 }

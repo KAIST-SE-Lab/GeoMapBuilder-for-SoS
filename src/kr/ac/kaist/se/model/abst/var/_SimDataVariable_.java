@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * (Based on definitions from SIMVA-SoS Modeler and SIMVA-SoS Lite)
  * @author ymbaek
  */
-public abstract class _SimDataVariable_ {
+public abstract class _SimDataVariable_ implements Cloneable {
     protected String varId;        //id of a data (variable)
     protected String varName;      //name of a data (variable)
     protected String varType;      //type of a data (variable)
@@ -127,5 +127,22 @@ public abstract class _SimDataVariable_ {
 
         //Update actual data type according to its dataType
         setActualDataTypeVar(this.varType);
+    }
+
+
+    /**
+     * An implemented method of Cloneable interface
+     * @return cloned object of this class
+     */
+    public _SimDataVariable_ clone() {
+        _SimDataVariable_ dimVar = null;
+
+        try {
+            dimVar = (_SimDataVariable_) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return dimVar;
     }
 }

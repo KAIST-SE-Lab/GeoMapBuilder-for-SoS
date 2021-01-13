@@ -1,0 +1,4 @@
+SET(dustLevelVar=3);
+SET(isWallVar=0, isChargingStationVar=1)WHERE(ALL);
+
+SET(isWallVar=3)WHERE(xPosVar==1 && yPosVar==1);
