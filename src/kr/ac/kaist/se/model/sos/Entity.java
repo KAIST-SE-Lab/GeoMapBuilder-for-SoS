@@ -82,7 +82,9 @@ public abstract class Entity extends _SimObject_ {
 
         ArrayList<SimLogEvent> actionLogEvents = new ArrayList<>();
 
-        //This project only considers MoveAction
+        //This project only considers MoveAction.
+        //However, original class (_SimActionableObject_) can perform:
+        //(1)FuncAction, (2)MoveAction, and (3)CommAction
         if (actionObj instanceof MoveAction){
             actionLogEvents = actionObj.executeAction(tick);
         }

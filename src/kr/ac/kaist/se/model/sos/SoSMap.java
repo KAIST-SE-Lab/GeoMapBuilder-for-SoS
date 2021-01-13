@@ -164,6 +164,11 @@ public abstract class SoSMap extends _SimMap_ {
         }
     }
 
+
+    /**
+     * A method to make string-based keys of a map hashmap (mapLocInfo)
+     * @return A list of keys generated
+     */
     private ArrayList<String> makeKeyStrings(){
 
         //Keys to be returned
@@ -183,8 +188,6 @@ public abstract class SoSMap extends _SimMap_ {
 
         }
 
-//        System.out.println(multi);
-
 
         int numTotalKeysExceptFirstDimVar = multi.get(multi.size() - 1);
         int possibleValuesOfFirstDimVar = mapDimVars.get(0).countPossibleValues();
@@ -202,11 +205,8 @@ public abstract class SoSMap extends _SimMap_ {
                 if (j != 0){
                     aKey += ",";
                 }
-
                 aKey += mapDimVars.get(j).getValueWithIndex((i / multiForDimVar) % mapDimVars.get(j).countPossibleValues());
-
             }
-
             keyListToReturn.add(aKey);
         }
 
@@ -214,8 +214,9 @@ public abstract class SoSMap extends _SimMap_ {
         return keyListToReturn;
     }
 
+
     /**
-     * A method to make string-based keys of a map hashmap (mapLocInfo)
+     * A method to recursively make string-based keys of a map hashmap (mapLocInfo)
      * @param varIndex  An index to recursively generate keys
      * @return  A list of keys generated
      * @deprecated {@link #makeKeyStrings()}
