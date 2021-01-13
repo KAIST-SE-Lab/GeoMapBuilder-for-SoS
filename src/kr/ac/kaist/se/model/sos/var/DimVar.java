@@ -57,4 +57,30 @@ public abstract class DimVar extends _SimDataVariable_ {
     public void setVarDomain(DimVarDomain varDomain) {
         this.varDomain = varDomain;
     }
+
+    /**
+     * A method to count the number of possible values of this dimVar
+     * @return  the number counted
+     */
+    public int countPossibleValues(){
+        //case of integer type
+        if (varType == "Int"){
+            return (int)varDomain.getDomainMaxVal() - (int)varDomain.getDomainMinVal() + 1;
+        }
+        //case of enum type
+        else{
+            return varDomain.getDomainEnumVal().size();
+        }
+    }
+
+    public String getValueWithIndex(int index){
+        //case of integer type
+        if (varType == "Int"){
+            return (int)varDomain.getDomainMinVal() + index + "";
+        }
+        //case of enum type
+        else{
+            return varDomain.getDomainEnumVal().get(index);
+        }
+    }
 }

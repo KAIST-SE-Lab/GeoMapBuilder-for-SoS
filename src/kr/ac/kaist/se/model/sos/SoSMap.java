@@ -98,6 +98,8 @@ public abstract class SoSMap extends _SimMap_ {
 
         initMapLocKeys();
 
+//        System.out.println(makeKeyStrings());
+
         mapBuilder = new MapBuilder(mapInitFileName, mapLocInfo);
         mapBuilder.updateMapData(mapDimVars, mapDataVars);
 
@@ -112,8 +114,11 @@ public abstract class SoSMap extends _SimMap_ {
     private void initMapLocKeys(){
         initMapDimVarsAsMinVal();
 
-        //Keys to be stored in hashmap (mapLocInfo)
-        ArrayList<String> keyList = makeKeyString(0);
+        //Keys to be stored in hashmap (mapLocInfo) (deprecated)
+//        ArrayList<String> keyList = makeKeyString(0);
+
+        //New version
+        ArrayList<String> keyList = makeKeyStrings();
 
         ArrayList<DataVar> defaultDataVars = new ArrayList<>();
 
@@ -159,11 +164,61 @@ public abstract class SoSMap extends _SimMap_ {
         }
     }
 
+    private ArrayList<String> makeKeyStrings(){
+
+        //Keys to be returned
+        ArrayList<String> keyListToReturn = new ArrayList<>();
+
+        //Arraylist for multiplication (to count how many times a value is shown)
+        ArrayList<Integer> multi = new ArrayList<>();
+
+        //EX) xPos(0~2), yPos(0~4), floor(1~3)
+        //expected output of multi: [1, 3, 15]
+        multi.add(1);
+
+        for (int i = 0; i < mapDimVars.size() - 1; i++){
+            int prevMulti = multi.get(multi.size() - 1);
+            DimVar aDimVar = mapDimVars.get(mapDimVars.size() - 1 - i);
+            multi.add(prevMulti * aDimVar.countPossibleValues());
+
+        }
+
+//        System.out.println(multi);
+
+
+        int numTotalKeysExceptFirstDimVar = multi.get(multi.size() - 1);
+        int possibleValuesOfFirstDimVar = mapDimVars.get(0).countPossibleValues();
+
+        int numTotalKeys = numTotalKeysExceptFirstDimVar * possibleValuesOfFirstDimVar;
+
+        //For each key
+        for (int i = 0; i < numTotalKeys; i++){
+            String aKey = "";
+
+            //For each dimVar
+            for (int j = 0; j < mapDimVars.size(); j++){
+                int multiForDimVar = multi.get(mapDimVars.size() - 1 - j);
+
+                if (j != 0){
+                    aKey += ",";
+                }
+
+                aKey += mapDimVars.get(j).getValueWithIndex((i / multiForDimVar) % mapDimVars.get(j).countPossibleValues());
+
+            }
+
+            keyListToReturn.add(aKey);
+        }
+
+
+        return keyListToReturn;
+    }
 
     /**
      * A method to make string-based keys of a map hashmap (mapLocInfo)
      * @param varIndex  An index to recursively generate keys
      * @return  A list of keys generated
+     * @deprecated {@link #makeKeyStrings()}
      */
     private ArrayList<String> makeKeyString(int varIndex){
 
