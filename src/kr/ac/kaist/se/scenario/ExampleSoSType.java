@@ -5,6 +5,7 @@ import kr.ac.kaist.se.model.sos.Entity;
 import kr.ac.kaist.se.model.sos.ObjectLocation;
 import kr.ac.kaist.se.model.sos.SoS;
 import kr.ac.kaist.se.model.sos.SoSMap;
+import kr.ac.kaist.se.model.sos.cap.MoveAction;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class ExampleSoSType extends SoS {
         ExampleObjectType obj01 = new ExampleObjectType(this,
                 "OBJ_01",
                 "OBJ_01");
+
 
         ExampleObjectType obj02 = new ExampleObjectType(this,
                 "OBJ_02",

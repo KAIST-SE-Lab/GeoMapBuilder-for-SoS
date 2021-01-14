@@ -18,16 +18,29 @@ public class MoveAction extends _SimAction_ {
 
     /* Attributes to execute a MoveAction */
     private ArrayList<DimVar> allowedDims;      //Allowed dimensions
+
+    private ArrayList<String> allowedDimVarIds; //Ids of allowed dimensions
     private ArrayList<Integer> dimVarDiffList;  //Differences for updating dimVars
+
+//    public MoveAction(SoS accessibleSoS,
+//                      _SimObject_ actionSubject,
+//                      String actionId,
+//                      String actionName,
+//                      ArrayList<DimVar> allowedDims,
+//                      ArrayList<Integer> dimVarDiffList) {
+//        super(accessibleSoS, actionSubject, actionId, actionName);
+//        this.allowedDims = allowedDims;
+//        this.dimVarDiffList = dimVarDiffList;
+//    }
 
     public MoveAction(SoS accessibleSoS,
                       _SimObject_ actionSubject,
                       String actionId,
                       String actionName,
-                      ArrayList<DimVar> allowedDims,
+                      ArrayList<String> allowedDimVarIds,
                       ArrayList<Integer> dimVarDiffList) {
         super(accessibleSoS, actionSubject, actionId, actionName);
-        this.allowedDims = allowedDims;
+        this.allowedDimVarIds = allowedDimVarIds;
         this.dimVarDiffList = dimVarDiffList;
     }
 
@@ -48,11 +61,21 @@ public class MoveAction extends _SimAction_ {
 
 
             String curLoc = actionSubject.getObjLocation();
+//            System.out.println(curLoc);
 
             int index = 0;
-            ArrayList<Integer> targetDims = new ArrayList<>();
+//            ArrayList<Integer> targetDims = new ArrayList<>();
 
-            keyManager.getDimVarsFromKey(curLoc);
+            //EX. (1,0,FLOOR_2) -> [DimVar(xPosVar:1), DimVar(yPosVar:0), DimVar(floorVar:FLOOR_2)]
+            ArrayList<DimVar> objLocDimVars = keyManager.getDimVarsFromKey(curLoc);
+            System.out.println(objLocDimVars);
+//
+//
+//            boolean isMovable = true;
+//
+//            if (isMovable){
+//
+//            }
 
 //            for (DimVar objLocDimVar : getDimValuesFromKey(actionSubject.getObjLocation()))
 
@@ -66,5 +89,15 @@ public class MoveAction extends _SimAction_ {
     @Override
     public String generateLogEventSpec() {
         return null;
+    }
+
+    public void printMoveActionInfo(){
+        System.out.print("[" + actionId + "] ");
+
+        int allowedDimVarIndex = 0;
+        for (String dimVarId : allowedDimVarIds){
+            System.out.print(dimVarId + "(" + dimVarDiffList.get(allowedDimVarIndex) + ") ");
+        }
+        System.out.println();
     }
 }
