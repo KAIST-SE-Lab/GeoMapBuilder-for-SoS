@@ -1,15 +1,20 @@
-package kr.ac.kaist.se.scenario;
+package kr.ac.kaist.se.scenario_example;
 
 import kr.ac.kaist.se.model.sos.domain.DimVarDomain;
 import kr.ac.kaist.se.model.sos.var.DimVar;
-
-import java.sql.Timestamp;
 
 /**
  * Dimension to represent coordinates of a map
  * @author ymbaek
  */
 public class MapCoordinateDimType extends DimVar {
+
+    public MapCoordinateDimType(String varId,
+                                String varName,
+                                String varType,
+                                DimVarDomain varDomain) {
+        super(varId, varName, varType, varDomain);
+    }
 
     public MapCoordinateDimType(String varId,
                                 String varName,

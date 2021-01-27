@@ -19,6 +19,12 @@ public abstract class _SimDataVariable_ implements Cloneable {
     private String dataDefaultValue;  //default value of a data (variable)
     private String dataCurValue;      //current value of a data (variable)
 
+    public _SimDataVariable_(String varId, String varName, String varType) {
+        this.varId = varId;
+        this.varName = varName;
+        this.varType = varType;
+    }
+
     public _SimDataVariable_(String varId,
                              String varName,
                              String varType,

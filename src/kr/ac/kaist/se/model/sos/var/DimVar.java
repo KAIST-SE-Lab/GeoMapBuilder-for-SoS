@@ -23,6 +23,14 @@ public abstract class DimVar extends _SimDataVariable_ {
     public DimVar(String varId,
                   String varName,
                   String varType,
+                  DimVarDomain varDomain) {
+        super(varId, varName, varType);
+        this.varDomain = varDomain;
+    }
+
+    public DimVar(String varId,
+                  String varName,
+                  String varType,
                   String dataDefaultValue,
                   String dataCurValue,
                   DimVarDomain varDomain) {

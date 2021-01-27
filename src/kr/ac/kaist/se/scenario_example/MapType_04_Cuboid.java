@@ -1,4 +1,4 @@
-package kr.ac.kaist.se.scenario;
+package kr.ac.kaist.se.scenario_example;
 
 import kr.ac.kaist.se.model.abst.var.EnumDomainType;
 import kr.ac.kaist.se.model.sos.SoSMap;
@@ -11,16 +11,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * A concrete class of an example SoSMap
- * @author ymbaek
+ * Example map type for case study: (d) 04_Cuboid
+ * @author ymbaek, ehcho
  */
-public class ExampleSoSMap extends SoSMap {
-
-    public ExampleSoSMap(String mapId, String mapName, String mapInitFileName) {
+public class MapType_04_Cuboid extends SoSMap {
+    public MapType_04_Cuboid(String mapId, String mapName, String mapInitFileName) {
         super(mapId, mapName, mapInitFileName);
     }
 
-    public ExampleSoSMap(String mapId, String mapName, ArrayList<DimVar> mapDimVars, ArrayList<DataVar> mapDataVars, String mapInitFileName) {
+    public MapType_04_Cuboid(String mapId, String mapName, ArrayList<DimVar> mapDimVars, ArrayList<DataVar> mapDataVars, String mapInitFileName) {
         super(mapId, mapName, mapDimVars, mapDataVars, mapInitFileName);
     }
 
@@ -30,16 +29,14 @@ public class ExampleSoSMap extends SoSMap {
         This method is automatically called by SoSMap.
 
         This ExampleSoSMap is a 3-dimensional map (logical, discrete)
-        Dimensions of this map: 5 x 3 x 3-floors
-            - xPos: int (0,5)
-            - yPos: int (0,5)
-            - floor: enum ("FLOOR_1", "FLOOR_2", "FLOOR_3")
+        Dimensions of this map
+            - xPos: int [0,2]
+            - yPos: int [0,3]
+            - floor: enum ("FLOOR_1", "FLOOR_2")
          */
-
         DimVarDomain xPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 2);
-        DimVarDomain yPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 2);
-        DimVarDomain floorDomain = new DimVarDomain(EnumDomainType.ENUMERATION, new ArrayList<String>(Arrays.asList("FLOOR_1", "FLOOR_2", "FLOOR_3")));
-//        DimVarDomain floorDomain = new DimVarDomain(EnumDomainType.ENUMERATION, new ArrayList<String>(Arrays.asList("FLOOR_1")));
+        DimVarDomain yPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 3);
+        DimVarDomain floorDomain = new DimVarDomain(EnumDomainType.ENUMERATION, new ArrayList<String>(Arrays.asList("FLOOR_1", "FLOOR_2")));
 
         MapCoordinateDimType xPosDimVar = new MapCoordinateDimType(
                 "xPosVar",
@@ -65,11 +62,11 @@ public class ExampleSoSMap extends SoSMap {
                 "FLOOR_1",
                 floorDomain);
 
+
         addDimVar(xPosDimVar);
         addDimVar(yPosDimVar);
         addDimVar(floorDimVar);
 
-        System.out.println("[" + this.getClass().getSimpleName() + "] mapDimVars initialized (size:" + getMapDimVars().size() + ")");
     }
 
     @Override
@@ -77,15 +74,13 @@ public class ExampleSoSMap extends SoSMap {
         /*
         This method is automatically called by SoSMap.
 
-        This ExampleSoSMap has three dataVars:
+        This ExampleSoSMap has two dataVars:
             - isWallVar: boolean [0,1]
             - isChargingStationVar: boolean [0,1]
-            - dustLevelVar: int [0,100]
          */
 
         DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
         DataVarDomain isChargingStationDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
-        DataVarDomain dustLevelDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 100);
 
         DataVar isWallVar = new DataVar(
                 "isWallVar",
@@ -103,18 +98,8 @@ public class ExampleSoSMap extends SoSMap {
                 "0",
                 isChargingStationDomain);
 
-        DataVar dustLevelVar = new DataVar(
-                "dustLevelVar",
-                "dustLevelVar",
-                "Int",
-                "0",
-                "0",
-                dustLevelDomain);
 
         addDataVar(isWallVar);
         addDataVar(isChargingStationVar);
-        addDataVar(dustLevelVar);
-
-        System.out.println("[" + this.getClass().getSimpleName() + "] mapDataVar initialized (size:" + getMapDataVars().size() + ")");
     }
 }

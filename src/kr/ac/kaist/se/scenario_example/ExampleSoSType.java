@@ -1,11 +1,8 @@
-package kr.ac.kaist.se.scenario;
+package kr.ac.kaist.se.scenario_example;
 
-import kr.ac.kaist.se.data.SimLogEvent;
 import kr.ac.kaist.se.model.sos.Entity;
-import kr.ac.kaist.se.model.sos.ObjectLocation;
 import kr.ac.kaist.se.model.sos.SoS;
 import kr.ac.kaist.se.model.sos.SoSMap;
-import kr.ac.kaist.se.model.sos.cap.MoveAction;
 
 import java.util.ArrayList;
 
