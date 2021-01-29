@@ -67,8 +67,9 @@ public class MoveAction extends _SimAction_ {
 //            ArrayList<Integer> targetDims = new ArrayList<>();
 
             //EX. (1,0,FLOOR_2) -> [DimVar(xPosVar:1), DimVar(yPosVar:0), DimVar(floorVar:FLOOR_2)]
-            ArrayList<DimVar> objLocDimVars = keyManager.getDimVarsFromKey(curLoc);
-            System.out.println(objLocDimVars);
+
+//            ArrayList<DimVar> objLocDimVars = keyManager.getDimVarsFromKey(curLoc);
+//            System.out.println(objLocDimVars);
 //
 //
 //            boolean isMovable = true;

@@ -34,7 +34,7 @@ public class MapType_02_Cycle extends SoSMap {
          */
         DimVarDomain loopPosDomain = new DimVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 5);
 
-        MapCoordinateDimType loopPosDimVar = new MapCoordinateDimType(
+        MapCoordinateCycleDimType loopPosDimVar = new MapCoordinateCycleDimType(
                 "loopPosVar",
                 "loopPosVar",
                 "Int",

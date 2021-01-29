@@ -20,20 +20,25 @@ public class Main {
 //        ExampleSoSMap sosMap = new ExampleSoSMap("SOSMAP01",
 //                "EXAMPLE_SOS_MAP", "ExampleSoSMapInit.txt");
 
+        //Map_Type_01_Line
         MapType_01_Line mapObject01Line = new MapType_01_Line("SOSMAP01",
-                "EXAMPLE_SOS_MAP_01", "ExampleSoSMapInit01.txt");
+                "EXAMPLE_SOS_MAP_01", "Map_Initialization_Type01_Line.txt");
 
+        //Map_Type_02_Cycle
         MapType_02_Cycle mapObject02Cycle = new MapType_02_Cycle("SOSMAP02",
-                "EXAMPLE_SOS_MAP_02", "ExampleSoSMapInit02.txt");
+                "EXAMPLE_SOS_MAP_02", "Map_Initialization_Type02_Cycle.txt");
 
+        //Map_Type_03_Plane
         MapType_03_Plane mapObject03Plane = new MapType_03_Plane("SOSMAP03",
-                "EXAMPLE_SOS_MAP_03", "ExampleSoSMapInit03.txt");
+                "EXAMPLE_SOS_MAP_03", "Map_Initialization_Type03_Plane.txt");
 
+        //Map_Type_04_Cuboid
         MapType_04_Cuboid mapObject04Cuboid = new MapType_04_Cuboid("SOSMAP04",
-                "EXAMPLE_SOS_MAP_04", "ExampleSoSMapInit04.txt");
+                "EXAMPLE_SOS_MAP_04", "Map_Initialization_Type04_Cuboid.txt");
 
+        //Map_Type_05_Cuboid_Extended (including Building numbers)
         MapType_05_Cuboid_Extended mapObject05CuboidExtended = new MapType_05_Cuboid_Extended("SOSMAP05",
-                "EXAMPLE_SOS_MAP_05", "ExampleSoSMapInit05.txt");
+                "EXAMPLE_SOS_MAP_05", "Map_Initialization_Type05_Cuboid_Extended.txt");
 
 
 

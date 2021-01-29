@@ -30,7 +30,7 @@ public class MapBuilder {
         fileReader = new MapFileReader();
         mapInitString = fileReader.readMapFile(mapInitFileName);
 
-
+//        System.out.println(mapInitString.length());
     }
 
     /**
@@ -49,69 +49,89 @@ public class MapBuilder {
         Set<String> wholeKeySet = mapLocInfoToBeUpdated.keySet();   //A set of keys from mapLocInfo of a map
         ArrayList<String> matchingKeySet;                           //Matching keys to be updated
 
-        /* Input query for initialization/update */
-        ArrayList<String> mapInitQueryList = new ArrayList<>(Arrays.asList(mapInitString.trim().split(";")));
+        if (mapInitString.length() > 0) {
 
-        //For every query divided by ";"
-        for (String mapInitQuery : mapInitQueryList) {
-            //Trim for every query
-            mapInitQuery = mapInitQuery.trim();
+            /* Input query for initialization/update */
+            ArrayList<String> mapInitQueryList = new ArrayList<>(Arrays.asList(mapInitString.trim().split(";")));
 
-            String setString = "";      //SET(setString)
-            String whereString = "";    //WHERE(whereString)
+            System.out.println(mapInitQueryList.size() + "|" + mapInitQueryList);
 
-            /* Clauses parsed from the query (mapInitQuery) */
-            ArrayList<String> datavarAssignmentClauses = new ArrayList<>(); //Assignment queries for dataVars
-            ArrayList<String> dimvarConditionClauses = new ArrayList<>();   //Conditions of dimVars
+            //For every query divided by ";"
+            for (String mapInitQuery : mapInitQueryList) {
+                //Trim for every query
+                mapInitQuery = mapInitQuery.trim();
 
-            /* Indices and values of conDimVars and dataVars */
-            ArrayList<Integer> condDimVarIndices = new ArrayList<>();
-            ArrayList<String> condDimVarValues = new ArrayList<>();
+                String setString = "";      //SET(setString)
+                String whereString = "";    //WHERE(whereString)
 
-            ArrayList<Integer> dataVarIndices = new ArrayList<>();
-            ArrayList<String> dataVarValues = new ArrayList<>();
+                /* Clauses parsed from the query (mapInitQuery) */
+                ArrayList<String> datavarAssignmentClauses = new ArrayList<>(); //Assignment queries for dataVars
+                ArrayList<String> dimvarConditionClauses = new ArrayList<>();   //Conditions of dimVars
 
-            //List of datavars to be stored in the hashmap (mapLocInfoToBeUpdated)
-            ArrayList<DataVar> locDataVars = new ArrayList<>();
+                /* Indices and values of conDimVars and dataVars */
+                ArrayList<Integer> condDimVarIndices = new ArrayList<>();
+                ArrayList<String> condDimVarValues = new ArrayList<>();
 
+                ArrayList<Integer> dataVarIndices = new ArrayList<>();
+                ArrayList<String> dataVarValues = new ArrayList<>();
 
-
-            /* PHASE 01. Get setString (SET(setString)) */
-            setString = mapInitQuery.split("WHERE")[0].split("SET")[1].trim();
-            setString = setString.replace("(", "").replace(")", "").trim();
-
-            trimStrings(new ArrayList<>(Arrays.asList(setString.split(","))), datavarAssignmentClauses);
+                //List of datavars to be stored in the hashmap (mapLocInfoToBeUpdated)
+                ArrayList<DataVar> locDataVars = new ArrayList<>();
 
 
-            /* PHASE 02. Check conditions based on whereString */
 
-            //If there is WHERE clause, we have to check <dimvarConditionClauses(s)>
-            if (mapInitQuery.contains("WHERE")) {
+                /* PHASE 01. Get setString (SET(setString)) */
+                setString = mapInitQuery.split("WHERE")[0].split("SET")[1].trim();
+                setString = setString.replace("(", "").replace(")", "").trim();
 
-                /* Get whereString (WHERE(whereString)) */
-                whereString = mapInitQuery.split("WHERE")[1].trim();
-                whereString = whereString.replace("(", "").replace(")", "").trim();
+                trimStrings(new ArrayList<>(Arrays.asList(setString.split(","))), datavarAssignmentClauses);
 
-                //WHERE(dimvar_cond)
-                if (!whereString.equals("ALL")) {
-                    trimStrings(new ArrayList<>(Arrays.asList(whereString.split("&&"))), dimvarConditionClauses);
 
-                    parseDimVarConditionClauses(dimvarConditionClauses, mapDimVars, condDimVarIndices, condDimVarValues);
+                /* PHASE 02. Check conditions based on whereString */
 
-                    //Matching keys are found based on dimvarConditions
-                    matchingKeySet = findMatchingKeys(wholeKeySet, condDimVarIndices, condDimVarValues);
+                //If there is WHERE clause, we have to check <dimvarConditionClauses(s)>
+                if (mapInitQuery.contains("WHERE")) {
 
-                    //Update the hashmap (mapLocInfoToBeUpdated)
-                    updateDataVarsOfHashMap(datavarAssignmentClauses,
-                            mapDataVars,
-                            matchingKeySet,
-                            locDataVars,
-                            dataVarIndices,
-                            dataVarValues);
+                    /* Get whereString (WHERE(whereString)) */
+                    whereString = mapInitQuery.split("WHERE")[1].trim();
+                    whereString = whereString.replace("(", "").replace(")", "").trim();
 
+                    //WHERE(dimvar_cond)
+                    if (!whereString.equals("ALL")) {
+                        trimStrings(new ArrayList<>(Arrays.asList(whereString.split("&&"))), dimvarConditionClauses);
+
+                        parseDimVarConditionClauses(dimvarConditionClauses, mapDimVars, condDimVarIndices, condDimVarValues);
+
+                        //Matching keys are found based on dimvarConditions
+                        matchingKeySet = findMatchingKeys(wholeKeySet, condDimVarIndices, condDimVarValues);
+
+                        //Update the hashmap (mapLocInfoToBeUpdated)
+                        updateDataVarsOfHashMap(datavarAssignmentClauses,
+                                mapDataVars,
+                                matchingKeySet,
+                                locDataVars,
+                                dataVarIndices,
+                                dataVarValues);
+
+                    }
+                    //WHERE(ALL)
+                    else {
+                        //In this case, parsing dimVarConditions (where clause) is not needed.
+                        //Since this is for all points, wholeKeySet itself will be matchingKeySet
+                        matchingKeySet = new ArrayList<>(wholeKeySet);
+
+                        //Update the hashmap (mapLocInfoToBeUpdated)
+                        updateDataVarsOfHashMap(datavarAssignmentClauses,
+                                mapDataVars,
+                                matchingKeySet,
+                                locDataVars,
+                                dataVarIndices,
+                                dataVarValues);
+
+                    }
                 }
-                //WHERE(ALL)
-                else {
+                //If there is no WHERE clause, it means ALL
+                else if (!mapInitQuery.contains("WHERE")) {
                     //In this case, parsing dimVarConditions (where clause) is not needed.
                     //Since this is for all points, wholeKeySet itself will be matchingKeySet
                     matchingKeySet = new ArrayList<>(wholeKeySet);
@@ -123,27 +143,12 @@ public class MapBuilder {
                             locDataVars,
                             dataVarIndices,
                             dataVarValues);
-
                 }
+
+                System.out.println("\nupdateMapData Query: " + mapInitQuery);
+                printMapLocHashMap(mapLocInfoToBeUpdated);
+
             }
-            //If there is no WHERE clause, it means ALL
-            else if (!mapInitQuery.contains("WHERE")) {
-                //In this case, parsing dimVarConditions (where clause) is not needed.
-                //Since this is for all points, wholeKeySet itself will be matchingKeySet
-                matchingKeySet = new ArrayList<>(wholeKeySet);
-
-                //Update the hashmap (mapLocInfoToBeUpdated)
-                updateDataVarsOfHashMap(datavarAssignmentClauses,
-                        mapDataVars,
-                        matchingKeySet,
-                        locDataVars,
-                        dataVarIndices,
-                        dataVarValues);
-            }
-
-            System.out.println("\nupdateMapData Query: " + mapInitQuery);
-            printMapLocHashMap(mapLocInfoToBeUpdated);
-
         }
     }
 
