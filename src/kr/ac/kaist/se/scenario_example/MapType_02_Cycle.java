@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 /**
  * Example map type for case study: (b) 02_cycle
+ *
  * @author ymbaek, ehcho
  */
 public class MapType_02_Cycle extends SoSMap {
@@ -55,7 +56,7 @@ public class MapType_02_Cycle extends SoSMap {
             - isStartPositionVar: boolean [0,1]
          */
 
-        DataVarDomain isStartPositionDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
+        DataVarDomain isStartPositionDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
 
         DataVar isStartPositionVar = new DataVar(
                 "isStartPositionVar",

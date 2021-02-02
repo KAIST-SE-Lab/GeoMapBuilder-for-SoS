@@ -11,6 +11,7 @@ import java.util.Random;
 
 /**
  * A concrete class of an example object
+ *
  * @author ymbaek
  */
 public class ExampleObjectType extends Entity {
@@ -88,7 +89,6 @@ public class ExampleObjectType extends Entity {
         capableActionList.add(xyPosMoveMinusOne);
 
     }
-
 
 
     @Override

@@ -5,23 +5,24 @@ import kr.ac.kaist.se.model.sos.var.DimVar;
 
 /**
  * Dimension to represent coordinates (cycle) of a map
+ *
  * @author ymbaek
  */
 public class MapCoordinateCycleDimType extends DimVar {
 
     public MapCoordinateCycleDimType(String varId,
-                                String varName,
-                                String varType,
-                                DimVarDomain varDomain) {
+                                     String varName,
+                                     String varType,
+                                     DimVarDomain varDomain) {
         super(varId, varName, varType, varDomain);
     }
 
     public MapCoordinateCycleDimType(String varId,
-                                String varName,
-                                String varType,
-                                String dataDefaultValue,
-                                String dataCurValue,
-                                DimVarDomain varDomain) {
+                                     String varName,
+                                     String varType,
+                                     String dataDefaultValue,
+                                     String dataCurValue,
+                                     DimVarDomain varDomain) {
         super(varId, varName, varType, dataDefaultValue, dataCurValue, varDomain);
     }
 
@@ -33,14 +34,10 @@ public class MapCoordinateCycleDimType extends DimVar {
         //Since MapCoordinateDimensionType has integer dataType, it returns false if it is not met.
         if (integerData != null) {
             //If newValue is out of range of varDomain
-            if (newValue < varDomain.getDomainMinVal() || newValue > varDomain.getDomainMaxVal()) {
-                return false;
-            }
+            return !(newValue < varDomain.getDomainMinVal()) && !(newValue > varDomain.getDomainMaxVal());
         } else {
             return false;
         }
-
-        return true;
     }
 
     @Override
@@ -57,12 +54,11 @@ public class MapCoordinateCycleDimType extends DimVar {
             //If newValue is out of range of varDomain
             if (newValue < varDomain.getDomainMinVal()) {
                 //Cycle: min -> max
-                newValue = (int)varDomain.getDomainMaxVal();
+                newValue = (int) varDomain.getDomainMaxVal();
                 this.setDataCurValue(newValue + "");
-            }
-            else if (newValue > varDomain.getDomainMaxVal()){
+            } else if (newValue > varDomain.getDomainMaxVal()) {
                 //Cycle: max -> min
-                newValue = (int)varDomain.getDomainMinVal();
+                newValue = (int) varDomain.getDomainMinVal();
                 this.setDataCurValue(newValue + "");
             }
             //If new value is inside of its domain

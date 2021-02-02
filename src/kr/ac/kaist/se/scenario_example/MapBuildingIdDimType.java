@@ -5,17 +5,18 @@ import kr.ac.kaist.se.model.sos.var.DimVar;
 
 /**
  * Dimension to represent building ids of a map
+ *
  * @author ymbaek
  */
 public class MapBuildingIdDimType extends DimVar {
 
 
     public MapBuildingIdDimType(String varId,
-                           String varName,
-                           String varType,
-                           String dataDefaultValue,
-                           String dataCurValue,
-                           DimVarDomain varDomain) {
+                                String varName,
+                                String varType,
+                                String dataDefaultValue,
+                                String dataCurValue,
+                                DimVarDomain varDomain) {
         super(varId, varName, varType, dataDefaultValue, dataCurValue, varDomain);
     }
 
@@ -39,15 +40,11 @@ public class MapBuildingIdDimType extends DimVar {
             //If enumIndex is properly found
             else {
                 //If it is out of domain
-                if (enumIndex + diff >= varDomain.getDomainEnumVal().size() || enumIndex + diff < 0) {
-                    return false;
-                }
+                return enumIndex + diff < varDomain.getDomainEnumVal().size() && enumIndex + diff >= 0;
             }
         } else {
             return false;
         }
-
-        return true;
     }
 
     @Override
@@ -69,7 +66,7 @@ public class MapBuildingIdDimType extends DimVar {
             //Update the value
             this.setDataCurValue(varDomain.getDomainEnumVal().get(newEnumIndex));
             return true;
-        }else{
+        } else {
             return false;
         }
 

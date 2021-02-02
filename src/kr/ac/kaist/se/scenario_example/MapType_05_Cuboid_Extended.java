@@ -12,6 +12,7 @@ import java.util.Arrays;
 
 /**
  * Example map type for case study: Extension of (d) 04_Cuboid
+ *
  * @author ymbaek, ehcho
  */
 public class MapType_05_Cuboid_Extended extends SoSMap {
@@ -92,8 +93,8 @@ public class MapType_05_Cuboid_Extended extends SoSMap {
             - dustLevelVar: int [0,100]
          */
 
-        DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
-        DataVarDomain isChargingStationDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
+        DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
+        DataVarDomain isChargingStationDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
         DataVarDomain dustLevelDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 100);
 
         DataVar isWallVar = new DataVar(

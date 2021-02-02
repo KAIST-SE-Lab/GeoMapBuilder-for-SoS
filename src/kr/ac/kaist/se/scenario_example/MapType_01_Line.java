@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 /**
  * Example map type for case study: (a) 01_Line
+ *
  * @author ymbaek, ehcho
  */
 public class MapType_01_Line extends SoSMap {
@@ -55,7 +56,7 @@ public class MapType_01_Line extends SoSMap {
             - isAccessibleVar: boolean [0,1]
          */
 
-        DataVarDomain isAccessibleDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
+        DataVarDomain isAccessibleDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
 
         DataVar isAccessibleVar = new DataVar(
                 "isAccessibleVar",

@@ -5,6 +5,7 @@ import kr.ac.kaist.se.model.sos.var.DimVar;
 
 /**
  * Dimension to represent coordinates of a map
+ *
  * @author ymbaek
  */
 public class MapCoordinateDimType extends DimVar {
@@ -33,14 +34,10 @@ public class MapCoordinateDimType extends DimVar {
         //Since MapCoordinateDimensionType has integer dataType, it returns false if it is not met.
         if (integerData != null) {
             //If newValue is out of range of varDomain
-            if (newValue < varDomain.getDomainMinVal() || newValue > varDomain.getDomainMaxVal()) {
-                return false;
-            }
+            return !(newValue < varDomain.getDomainMinVal()) && !(newValue > varDomain.getDomainMaxVal());
         } else {
             return false;
         }
-
-        return true;
     }
 
     @Override

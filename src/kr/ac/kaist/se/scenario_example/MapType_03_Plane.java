@@ -12,6 +12,7 @@ import java.util.Arrays;
 
 /**
  * Example map type for case study: (c) 03_Plane
+ *
  * @author ymbaek, ehcho
  */
 public class MapType_03_Plane extends SoSMap {
@@ -68,8 +69,8 @@ public class MapType_03_Plane extends SoSMap {
             - isChargingStationVar: boolean [0,1]
          */
 
-        DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
-        DataVarDomain isChargingStationDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
+        DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
+        DataVarDomain isChargingStationDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
 
         DataVar isWallVar = new DataVar(
                 "isWallVar",

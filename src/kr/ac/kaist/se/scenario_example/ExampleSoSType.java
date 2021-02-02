@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 /**
  * A concrete class of an example SoS that includes one or more ExampleObjects
+ *
  * @author ymbaek
  */
 public class ExampleSoSType extends SoS {

@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class Main {
 
-    public static void main (String []args){
+    public static void main(String[] args) {
 
         /* Initialization of a map */
 //        ExampleSoSMap sosMap = new ExampleSoSMap("SOSMAP01",
@@ -44,17 +44,39 @@ public class Main {
 
         /* Initialization of a sim model */
         //Declaration and instantiation of an SoS object
-        ExampleSoSType sos = new ExampleSoSType("SOS01",
+        ExampleSoSType sos01 = new ExampleSoSType("SOS01",
+                "EXAMPLE_SOS",
+                "",
+                mapObject01Line,
+                new ArrayList<Entity>());
+
+        ExampleSoSType sos02 = new ExampleSoSType("SOS01",
+                "EXAMPLE_SOS",
+                "",
+                mapObject02Cycle,
+                new ArrayList<Entity>());
+
+        ExampleSoSType sos03 = new ExampleSoSType("SOS01",
+                "EXAMPLE_SOS",
+                "",
+                mapObject03Plane,
+                new ArrayList<Entity>());
+
+        ExampleSoSType sos04 = new ExampleSoSType("SOS01",
+                "EXAMPLE_SOS",
+                "",
+                mapObject04Cuboid,
+                new ArrayList<Entity>());
+
+        ExampleSoSType sos05 = new ExampleSoSType("SOS01",
                 "EXAMPLE_SOS",
                 "",
                 mapObject05CuboidExtended,
                 new ArrayList<Entity>());
 
 
-        SimEngine simEngine = new SimEngine(sos);
-        simEngine.startSimulation();
+//        SimEngine simEngine = new SimEngine(sos);
+//        simEngine.startSimulation();
     }
-
-
 
 }

@@ -12,6 +12,7 @@ import java.util.Arrays;
 
 /**
  * Example map type for case study: (d) 04_Cuboid
+ *
  * @author ymbaek, ehcho
  */
 public class MapType_04_Cuboid extends SoSMap {
@@ -79,8 +80,8 @@ public class MapType_04_Cuboid extends SoSMap {
             - isChargingStationVar: boolean [0,1]
          */
 
-        DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
-        DataVarDomain isChargingStationDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
+        DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
+        DataVarDomain isChargingStationDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
 
         DataVar isWallVar = new DataVar(
                 "isWallVar",

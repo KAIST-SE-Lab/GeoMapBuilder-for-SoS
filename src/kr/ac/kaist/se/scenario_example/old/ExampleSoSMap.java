@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 /**
  * A concrete class of an example SoSMap
+ *
  * @author ymbaek
  */
 public class ExampleSoSMap extends SoSMap {
@@ -85,8 +86,8 @@ public class ExampleSoSMap extends SoSMap {
             - dustLevelVar: int [0,100]
          */
 
-        DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
-        DataVarDomain isChargingStationDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE,0,1);
+        DataVarDomain isWallDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
+        DataVarDomain isChargingStationDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 1);
         DataVarDomain dustLevelDomain = new DataVarDomain(EnumDomainType.VALUE_RANGE_DISCRETE, 0, 100);
 
         DataVar isWallVar = new DataVar(
