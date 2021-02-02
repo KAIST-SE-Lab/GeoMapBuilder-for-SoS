@@ -49,7 +49,6 @@ public abstract class _SimAction_ {
      *
      * @param tick current tick of simulation
      */
-    //TODO: check (set) return
     public abstract ArrayList<SimLogEvent> executeAction(int tick);
 
     /**

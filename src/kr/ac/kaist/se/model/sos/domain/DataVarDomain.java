@@ -11,8 +11,6 @@ import java.util.ArrayList;
  */
 public class DataVarDomain extends _SimDataDomain_ {
 
-    //TODO: Specialize DataVarDomain
-
     public DataVarDomain(EnumDomainType domainType, float domainMinVal, float domainMaxVal) {
         super(domainType, domainMinVal, domainMaxVal);
     }

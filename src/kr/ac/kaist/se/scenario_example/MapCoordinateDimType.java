@@ -45,9 +45,6 @@ public class MapCoordinateDimType extends DimVar {
         int newValue = Integer.parseInt(this.getDataCurValue());
         newValue += diff;
 
-        //TODO: Value checking
-        //System.out.println(varDomain.isValidValue(newValue));
-
         //Since MapCoordinateDimensionType has integer dataType, it returns false if it is not met.
         if (integerData != null) {
 

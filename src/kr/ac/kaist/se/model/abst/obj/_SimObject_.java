@@ -1,7 +1,6 @@
 package kr.ac.kaist.se.model.abst.obj;
 
 import kr.ac.kaist.se.model.intf.Simulatable;
-import kr.ac.kaist.se.model.sos.ObjectLocation;
 
 import java.sql.Timestamp;
 
