@@ -1,0 +1,2 @@
+SET(isAccessibleVar=1)WHERE(ALL);
+SET(isAccessibleVar=0)WHERE(xPosVar==10);

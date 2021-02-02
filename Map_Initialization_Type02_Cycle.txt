@@ -1,0 +1,2 @@
+SET(isStartPositionVar=0)WHERE(ALL);
+SET(isStartPositionVar=1)WHERE(loopPosVar==0);

@@ -8,7 +8,7 @@ This repository shows the overall process of building the geographical environme
 ## Getting Started
 ### Prerequisites
 ```
-- Java 15.1 
+- Java 15.1
 ```
 
 <br>
@@ -45,7 +45,7 @@ This repository shows the overall process of building the geographical environme
 1. Make a user-defined map class that extends SoSMap
     ```Java
     public class MapType_04_Cuboid extends SoSMap
-    ```  
+    ```
 1. Declare and initialize dimension variables (*DimVar*s) with their domains (DimVarDomain) in the user-defined map class
     adsfasdf
 
@@ -78,7 +78,7 @@ This repository shows the overall process of building the geographical environme
     MapType_04_Cuboid mapObject04Cuboid = new MapType_04_Cuboid("SOSMAP04",
                 "EXAMPLE_SOS_MAP_04", "Map_Initialization_Type04_Cuboid.txt");
     ```
-    
+
     Here, Map_Initialization_Type04_Cuboid.txt is a file for the map initialization. See [How to update map data](#how-to-update-map-data) section below.
 
 1. Instantiate the user-defined SoS class at `Main.java`
