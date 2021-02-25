@@ -1,9 +1,7 @@
 package kr.ac.kaist.se;
 
-import kr.ac.kaist.se.controller.sim.SimEngine;
 import kr.ac.kaist.se.model.sos.Entity;
 import kr.ac.kaist.se.scenario_example.*;
-import kr.ac.kaist.se.scenario_example.old.ExampleSoSMap;
 
 import java.util.ArrayList;
 
@@ -40,6 +38,8 @@ public class Main {
         MapType_05_Cuboid_Extended mapObject05CuboidExtended = new MapType_05_Cuboid_Extended("SOSMAP05",
                 "EXAMPLE_SOS_MAP_05", "Map_Initialization_Type05_Cuboid_Extended.txt");
 
+        SmartTransportMap smartTransportMap = new SmartTransportMap("STMAP",
+                "SMART_TRANSPORT_MAP", "Smart_Transport_Map_Initialization.txt");
 
 
         /* Initialization of a sim model */
@@ -73,6 +73,13 @@ public class Main {
                 "",
                 mapObject05CuboidExtended,
                 new ArrayList<Entity>());
+
+
+        ExampleSoSType stsos = new ExampleSoSType("STSOS",
+                "SMART_TRANSPORT_SOS",
+                "",
+                smartTransportMap,
+                new ArrayList<>());
 
 
 //        SimEngine simEngine = new SimEngine(sos);

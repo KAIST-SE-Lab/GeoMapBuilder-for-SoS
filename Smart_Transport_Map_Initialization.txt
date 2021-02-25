@@ -1,0 +1,7 @@
+SET(isStationVar=0,isStationFrontVar=0,isStorageVar=0);
+SET(isStationVar=1)WHERE(cyclicRailRoadVar<10&&cyclicRailRoadVar>=0);
+SET(isStationVar=1)WHERE(cyclicRailRoadVar<60&&cyclicRailRoadVar>=50);
+SET(isStationFrontVar=1)WHERE(cyclicRailRoadVar==9);
+SET(isStationFrontVar=1)WHERE(cyclicRailRoadVar==59);
+SET(isStorageVar=1)WHERE(cyclicRailRoadVar==5&&railRoadLaneVar=="FACTORY");
+SET(isStorageVar=1)WHERE(cyclicRailRoadVar==55&&railRoadLaneVar=="FACTORY");
